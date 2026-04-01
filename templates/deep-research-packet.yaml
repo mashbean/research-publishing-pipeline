@@ -1,0 +1,51 @@
+topic: ""
+core_question: ""
+working_thesis: ""
+article_type: blog_article
+target_audience: ""
+
+# 給 Deep Research 的最小上下文
+input_prompt: |
+  請根據以下研究問題、既有正文與候選來源，補強論證、補齊證據、指出高風險主張，並產出可供後續 blog 重寫使用的研究包。
+  不要直接生成最終發稿文。
+  不要使用自我引用或不存在的來源。
+  若證據不足，請明確標示為待查核。
+
+# 第一版正文、舊稿、或使用者提供文本
+seed_draft: |
+  
+
+# 候選來源：可以是已知論文、法規、政策文件、審計報告
+candidate_sources:
+  - title: ""
+    url: ""
+    reason: ""
+
+must_use_sources:
+  - ""
+
+must_not_use_sources:
+  - "使用者原稿本身作為外部引用"
+  - "自我引用 placeholder，例如 mashbean, 2026"
+
+claims_to_verify:
+  - ""
+
+open_questions:
+  - ""
+
+style_constraints:
+  - "最終會轉成繁體中文 blog 長文"
+  - "避免報告腔與執行摘要腔"
+  - "不要產生 prompt 洩漏語句"
+
+citation_constraints:
+  - "優先使用學術論文、官方文件、法規、審計報告"
+  - "若證據不夠，不要強行下結論"
+
+expected_outputs:
+  - evidence_map
+  - source_notes
+  - high_risk_claims
+  - suggested_structure
+  - research_summary

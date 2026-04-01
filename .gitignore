@@ -1,0 +1,10 @@
+# Job data (personal articles)
+jobs/*/
+!jobs/_example/
+
+# Python
+__pycache__/
+*.pyc
+
+# OS
+.DS_Store

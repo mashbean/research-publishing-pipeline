@@ -1,0 +1,19 @@
+{
+  "jobId": "",
+  "status": "intake",
+  "title": "",
+  "contentGoal": "blog_article",
+  "nextStep": "",
+  "blockedReason": "",
+  "lastDeliverable": "",
+  "lastUpdated": "",
+  "versions": [],
+  "publish": {
+    "repo": "",
+    "file": "",
+    "deployRun": "",
+    "commitSha": "",
+    "canonicalUrl": "",
+    "legacyUrls": []
+  }
+}

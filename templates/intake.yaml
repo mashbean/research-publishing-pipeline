@@ -1,0 +1,24 @@
+title_hint: ""
+content_goal: blog_article
+language: zh-TW
+audience: ""
+source_inputs:
+  - ""
+core_question:
+  - ""
+working_thesis: ""
+must_do:
+  - ""
+must_avoid:
+  - "自我引用"
+  - "不……而……"
+  - "正文濫用冒號"
+known_sources:
+  - ""
+open_questions:
+  - ""
+publish_target:
+  repo: ""
+  collection: blog
+  file_hint: ""
+notes: ""
