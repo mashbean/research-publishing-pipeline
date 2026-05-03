@@ -113,7 +113,14 @@ python3 scripts/run_external_deep_research.py <job-id>
 
 該腳本用 Anthropic API + Opus 4.7 + adaptive thinking + web_search_20260209 + Task Budgets 跑獨立深度研究（細節見 `scripts/run_external_deep_research.py` docstring）。產出 `raw/external-deep-research-claude.md`。
 
-**已知限制**：`web_search_20260209` 內建 dynamic filtering 使用 server-side Python sandbox。如果 Claude 把長文輸出寫到 sandbox 內部檔案，那份內容無法 export 回 `raw/`，只剩 stream 的摘要。這時 cross-validation 視為「軟通過」(無新矛盾即可)，不強求完整 11k 字外部研究包。
+**Sandbox-leak 修補（2026-05-03）**：先前 `web_search_20260209` 內建 dynamic filtering 使用 server-side Python sandbox；article 01 跑 cross-validation 時 model 把 11k 字輸出寫進 sandbox 檔案，無法 export 回 host filesystem，stream 只剩 3.8KB 摘要。
+
+修補三層：
+1. **切到 `web_search_20250305`**——無 dynamic filtering，無 Python sandbox 暴露面
+2. **強化 system prompt**——顯式禁止寫檔 / code execution，要求純 streaming text 輸出
+3. **Stream 偵測**——若 model 仍嘗試使用 `code_execution` / `bash` / `text_editor` / `container_upload` 等 sandbox 工具，即時警告並計數
+
+腳本完成時若 `Sandbox leaks: > 0`，視為輸出可能不完整，需要重跑或人工檢查。
 
 ## Step 5 — pipeline integrate
 
@@ -174,11 +181,14 @@ python3 scripts/run_deep_research.py <job-id> integrate
 
 ### 外部 cross-validation 內容遺失在 sandbox
 
-**徵兆**：`run_external_deep_research.py` 報告 output_tokens 很高（如 46K）但寫入的 `.md` 只有幾 KB。
+**徵兆**：`run_external_deep_research.py` 報告 output_tokens 很高（如 46K）但寫入的 `.md` 只有幾 KB；或 stderr 出現 `⚠️ SANDBOX-LEAK WARNING`。
 
-**原因**：Claude 用 web_search 內建 sandbox 的 Python 寫了長檔，但該檔無法 export 回 host filesystem。
+**原因**：Claude 用 web_search 內建 sandbox 的 Python 或其他 code execution 工具寫了長檔，但該檔無法 export 回 host filesystem。
 
-**救援**：把 stream 摘要中提到的 framing-level 發現整理進整合檔的 research_summary 末段（標明「外部 cross-validation」），不強求完整外部研究包。
+**救援**（自 2026-05-03 起）：
+1. 預設已切到 `web_search_20250305`（無 dynamic filtering），不應該再發生
+2. 若 sandbox-leak 警告仍出現，腳本會在完成時標出 `Sandbox leaks: N`，N > 0 表示輸出可能不完整
+3. 此時把 stream 摘要中提到的 framing-level 發現整理進整合檔的 research_summary 末段（標明「外部 cross-validation, 部分 sandbox 洩漏」），或重跑 + 加更嚴格 system prompt
 
 ## 啟動範例
 

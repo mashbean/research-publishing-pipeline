@@ -152,9 +152,18 @@ def main() -> int:
             "Produce rigorous, citation-rich research packs suitable for inclusion "
             "in a doctoral dissertation. Cite primary sources with full URL/DOI; "
             "distinguish A-grade peer-reviewed sources from B/C-grade. "
-            "Preserve <!-- SECTION: ... --> markers required by the pipeline."
+            "Preserve <!-- SECTION: ... --> markers required by the pipeline.\n\n"
+            "CRITICAL OUTPUT REQUIREMENT — DO NOT VIOLATE:\n"
+            "1. Stream the ENTIRE research pack as text content blocks in your response.\n"
+            "2. DO NOT save your output to any file (no Python file writes, no shell commands).\n"
+            "3. DO NOT use a sandbox or code-execution environment to construct large outputs.\n"
+            "4. Your text response IS the deliverable. Output the full markdown directly.\n"
+            "5. If the response would exceed the token limit, end with the literal token "
+            "<<TO_BE_CONTINUED>> so the caller can request continuation. Never silently "
+            "truncate or save-to-file.\n"
+            "Web search is the ONLY tool you should use, and only for retrieving sources."
         ),
-        help="System prompt (default: academic research framing)",
+        help="System prompt (default: academic research framing with strict streaming instruction)",
     )
     args = parser.parse_args()
 
@@ -204,15 +213,18 @@ def main() -> int:
         # display="summarized" makes thinking visible in stream (default is "omitted" on 4.7)
         "thinking": {"type": "adaptive", "display": "summarized"},
         "output_config": output_config,
+        # Tool selection note (since 2026-05-03):
+        # web_search_20260209 includes built-in dynamic filtering that runs a
+        # server-side Python REPL. Article 01 (2026-05-02) lost ~46K output tokens
+        # to that sandbox when the model wrote its final research pack into a
+        # sandbox file we couldn't export. Switching to web_search_20250305
+        # removes the Python sandbox entirely. Only web_search is needed for
+        # research; we do not include code_execution_20260120 to avoid giving
+        # the model another way to leak output to a sandbox file.
         "tools": [
             {
-                "type": "web_search_20260209",
+                "type": "web_search_20250305",
                 "name": "web_search",
-                "max_uses": args.max_uses,
-            },
-            {
-                "type": "web_fetch_20260209",
-                "name": "web_fetch",
                 "max_uses": args.max_uses,
             },
         ],
@@ -255,6 +267,36 @@ def main() -> int:
     thinking_chunks: list[str] = []
     web_searches = 0
     web_fetches = 0
+    # Sandbox-leak detector. Set when the model attempts to use code execution
+    # or any tool that could write output to a sandbox file we can't export.
+    # Article 01 (2026-05-02) lost ~46K output tokens this way; the new default
+    # forbids these tools but we still detect violations defensively.
+    sandbox_leak_warnings: list[str] = []
+    SANDBOX_TOOL_NAMES = {
+        "code_execution",       # code_execution_20260120
+        "bash",                 # general bash sandbox
+        "text_editor",          # str_replace_based_edit_tool
+        "container_upload",     # output via files-api
+    }
+    SANDBOX_BLOCK_TYPES = {
+        "server_tool_use",       # only flag when name in SANDBOX_TOOL_NAMES
+        "bash_code_execution_tool_result",
+        "code_execution_tool_result",
+        "text_editor_code_execution_tool_result",
+        "container_upload",
+    }
+
+    def _detect_sandbox_block(block) -> str | None:
+        """Return a warning string if this block indicates sandbox file output."""
+        btype = getattr(block, "type", None)
+        if btype == "server_tool_use":
+            name = getattr(block, "name", None)
+            if name in SANDBOX_TOOL_NAMES:
+                return f"server_tool_use({name})"
+            return None
+        if btype in SANDBOX_BLOCK_TYPES and btype != "server_tool_use":
+            return btype
+        return None
 
     if args.no_stream:
         method = client.beta.messages.create if betas else client.messages.create
@@ -269,10 +311,14 @@ def main() -> int:
             elif btype == "thinking":
                 thinking_chunks.append(block.thinking or "")
             elif btype == "server_tool_use":
-                if getattr(block, "name", None) == "web_search":
+                name = getattr(block, "name", None)
+                if name == "web_search":
                     web_searches += 1
-                elif getattr(block, "name", None) == "web_fetch":
+                elif name == "web_fetch":
                     web_fetches += 1
+            warning = _detect_sandbox_block(block)
+            if warning:
+                sandbox_leak_warnings.append(warning)
         usage = response.usage
     else:
         stream_method = client.beta.messages.stream if betas else client.messages.stream
@@ -284,7 +330,8 @@ def main() -> int:
                 etype = event.type
                 if etype == "content_block_start":
                     block = event.content_block
-                    if getattr(block, "type", None) == "server_tool_use":
+                    btype = getattr(block, "type", None)
+                    if btype == "server_tool_use":
                         name = getattr(block, "name", None)
                         if name == "web_search":
                             web_searches += 1
@@ -300,6 +347,16 @@ def main() -> int:
                                 file=sys.stderr,
                                 flush=True,
                             )
+                    warning = _detect_sandbox_block(block)
+                    if warning:
+                        sandbox_leak_warnings.append(warning)
+                        print(
+                            f"  ⚠️  SANDBOX-LEAK WARNING: model attempted {warning}. "
+                            "Output may be saved to a sandbox file we cannot export. "
+                            "See run_external_deep_research.py header note for context.",
+                            file=sys.stderr,
+                            flush=True,
+                        )
                 elif etype == "content_block_delta":
                     delta = event.delta
                     dtype = getattr(delta, "type", None)
@@ -321,9 +378,24 @@ def main() -> int:
         thinking_path = None
 
     print("", file=sys.stderr)
+    if sandbox_leak_warnings:
+        print(
+            "⚠️  SANDBOX-LEAK WARNING — output may be incomplete:",
+            file=sys.stderr,
+        )
+        for w in sandbox_leak_warnings:
+            print(f"     • {w}", file=sys.stderr)
+        print(
+            "     The model attempted to use a sandbox tool. Tokens routed to a "
+            "sandbox file would not appear in the saved .md. Check the file "
+            "size against `Output tokens` below — a large gap suggests a leak.",
+            file=sys.stderr,
+        )
+        print("", file=sys.stderr)
     print("✓ Done", file=sys.stderr)
     print(f"  web_search calls: {web_searches}", file=sys.stderr)
     print(f"  web_fetch calls:  {web_fetches}", file=sys.stderr)
+    print(f"  Sandbox leaks:    {len(sandbox_leak_warnings)}", file=sys.stderr)
     print(f"  Input tokens:     {usage.input_tokens:,}", file=sys.stderr)
     print(
         f"  Cache creation:   {getattr(usage, 'cache_creation_input_tokens', 0):,}",
