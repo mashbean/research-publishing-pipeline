@@ -190,6 +190,53 @@ python3 scripts/run_deep_research.py <job-id> integrate
 2. 若 sandbox-leak 警告仍出現，腳本會在完成時標出 `Sandbox leaks: N`，N > 0 表示輸出可能不完整
 3. 此時把 stream 摘要中提到的 framing-level 發現整理進整合檔的 research_summary 末段（標明「外部 cross-validation, 部分 sandbox 洩漏」），或重跑 + 加更嚴格 system prompt
 
+### Writer / Critic / Rewriter 在禁則自檢循環中 stall（自 article 03 起）
+
+**徵兆**：subagent 報告中或最後輸出顯示「我估計有 X 處不…而…、Y 處 em-dash 超量、Z 處報告腔」但持續無法推進到 Write 操作；600s watchdog 超時被殺。Article 03 的 writer + critic + rewriter 三次連續中此模式。
+
+**原因**：subagent 對長中文文檔（≥ 50KB）做大量禁則檢查與重寫時，會落入「掃描 → 估計 → 重寫策略 → 又掃描 → ...」的內部循環。每一輪 token 消耗大且不產出可流式輸出，stream 中斷觸發 watchdog。
+
+**救援**（main agent 直接用 Python 處理）：
+
+1. 檢測 subagent 是否進入此循環（通常 fail summary 會描述「估計 X 處需要修補」而非實際完成數）
+2. main agent 用 Bash + Python 一次完成機械改寫：
+   ```python
+   # 範例：mass replace + targeted fixes
+   text = src.read_text()
+   text = text.replace("舊禁則句型", "改寫後句型")  # 5 處targeted
+   text = text.replace("本研究", "本文")              # mass replace
+   text = text.replace("——", "；")                    # mass em-dash 降量
+   out.write_text(text)
+   ```
+3. 用 `grep -nE` 即時驗證禁則 0 命中
+
+**判準**：subagent 第一次 stall 即切換到 main agent 處理。不要重派同類 subagent——它們會以相同模式再次 stall。
+
+### Critic 報告做 line-by-line enumeration 會超時
+
+**徵兆**：critic subagent 22 分鐘只完成 14 tool uses，stream idle timeout 中止；fact-check-report 仍是空模板。
+
+**原因**：對 50KB / 8 章 / 50 引用的稿件做 line-by-line 巡檢，加上每處違規附建議改寫，產出量太大；subagent 在中間環節 stream 中斷。
+
+**救援**：critic 任務應由 main agent 主導禁則巡檢（grep 一次得行號清單），subagent 只做 *引用真實性 + 論證嚴謹度 + 高風險主張處理* 三項較重的判斷工作。或者禁則巡檢從 critic 完全移除，由 editor / editorial-pass 自動化處理。
+
+### Prescribed「必須出現」字串自身違反禁則（自 article 03 起）
+
+**徵兆**：main agent 在 prompt 中規定的「必須出現於文末的收束句」本身命中禁則表（如「不是…而是…」、`——` 過量），導致 writer 無法同時滿足「必出現此句」+「禁則 0 命中」兩條要求，落入自檢循環直到 stall。
+
+**原因**：main agent 起 prompt 時未對自己規定的句子做禁則 grep。
+
+**預防**（自 article 04 起，每篇 multi-agent flow 必做）：
+
+1. main agent 在派 writer prompt 前，把自己規定的「形式定義」、「核心收束句」、「必出現的主張陳述」等字串對 `specs/style-policy-zh.md` 的禁則表做 grep
+2. 若命中，先改寫到不命中再放進 prompt
+3. 推薦把這個檢查寫成一個 helper：
+   ```bash
+   echo "你的規定句" | grep -E "不是.*而是|並非.*而是|真正承重的是|—— 全文計" && echo "BAD: 違反禁則" || echo "OK"
+   ```
+
+**救援**（若已 stall）：main agent 改寫該句、重新發 prompt，或直接由 main agent 用 Python 一次套用所有改寫到 draft。
+
 ## 啟動範例
 
 ```python
