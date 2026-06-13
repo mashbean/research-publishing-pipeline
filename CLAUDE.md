@@ -175,12 +175,66 @@ Agent(
 - 不刪掉誠實邊界的限定語（但可以把語氣口語化）
 - 自檢清單九項至少命中六項，少於六項必須補
 
+### Step 7.6: Argmap（用 subagent，**僅 civic-proof 系列或 opt-in**）
+
+> **觸發條件**：intake.yaml 含 `generate_argmap: true`，或 `notes` 含 `civic-proof` 系列關鍵字（W1/W2/W3/.../博論章節對應）。一次性 blog 文章不執行。
+
+把已通過 editorial-pass（與 accent-pass，若有）的最終稿轉成 v2 argmap YAML。argmap 是已通過論證的視覺化結構，不是新分析——argmap pass 不重新做研究、不引入新 claim、不修改文章。
+
+```
+Agent(
+  description="Argmap pass for <job-id>",
+  subagent_type="general-purpose",
+  prompt="你是 argmap 代理。讀取 prompts/agent-argmap.md 的完整指令。\n讀取 final/article-final.md、intake.yaml、notes/reasoning-chain.md（若有）、\nverification/fact-check-report.md（若有）、verification/rewrite-warnings.md（若有），\n產出 final/argmap.yaml。發稿時會由 publish 一起推到 blog-pro。\n\n結構參考：external/blog-pro/src/content/argmaps/2026-05-02-accountability-without-identification.yaml（v2 範本主檔）。"
+)
+```
+
+完成後驗證 YAML 可解析：
+
+```bash
+python3 -c "import yaml; yaml.safe_load(open('jobs/<job-id>/final/argmap.yaml'))"
+```
+
+接著產出 Argdown 交換格式與本地渲染檔：
+
+```bash
+python3 scripts/run_pipeline.py <job-id> argdown
+```
+
+這會從 `final/argmap.yaml` deterministic 轉換成 `final/argument.argdown`，再輸出
+`final/argdown-render/<slug>/index.html` 與 `final/argdown-render/<slug>/map.svg`。
+Argdown 是公開交換／視覺化輸出，不是第二套正本；不得新增 claim、不得重寫文章、不得取代 `argmap.yaml`。
+轉換器會把正文清成 Argdown parser-safe 文字；完整公式與 rich text 仍以 `argmap.yaml` 為準。
+
+若要分段除錯，可單獨執行：
+
+```bash
+python3 scripts/generate_argdown.py <job-id>
+python3 scripts/validate_argdown.py <job-id>
+python3 scripts/render_argdown_assets.py <job-id>
+```
+
+argmap.yaml 上線後會自動被 blog-pro 的 master map（`/civic-proof-map/`）抓到——
+透過 `getCollection("argmaps")` 動態查詢，**不需要手動編輯** `src/pages/civic-proof-map.astro`。
+僅當文章引入了 19 篇 dissertation outline 之外的全新母命題時，才需要手動補 main map 的
+`articles` 與 `crossLinks`。
+
 ### Step 8: Publish + Verify
 
 ```bash
 python3 scripts/run_pipeline.py <job-id> publish
 python3 scripts/run_pipeline.py <job-id> verify
 ```
+
+**若有 `final/argmap.yaml`**：發稿時 publish 腳本必須把它一併推到
+`external/blog-pro/src/content/argmaps/<slug>.yaml`，與 report 在同一個 commit
+（或同一個 gh api PUT 批次）。argmap collection 用 glob loader 自動 pick up，
+不需要修改 content.config.ts。
+
+若有 `final/argmap.yaml` 但缺 `final/argument.argdown`，`run_pipeline.py publish`
+會先自動補跑 argdown step。publish 腳本也會把 `final/argument.argdown` 複製到
+`external/blog-pro/src/content/argdowns/<slug>.argdown`，並把 HTML/SVG 渲染資產輸出到
+`external/blog-pro/public/argdown/<slug>/`，讓 `/argmaps/<slug>/` 在頁尾直接顯示 SVG 圖表與 source。
 
 ### Step 9: Social Share（用 subagent）
 

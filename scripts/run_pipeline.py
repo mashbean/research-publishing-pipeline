@@ -17,7 +17,7 @@ Usage:
 
 Available steps:
   scope, generate-prompt, integrate-research, draft, fact-check,
-  rewrite, editorial-pass, publish, verify
+  rewrite, editorial-pass, argdown, publish, verify
 """
 from __future__ import annotations
 
@@ -122,8 +122,30 @@ def step_editorial_pass(job_dir: Path, state: dict) -> str | None:
     return None
 
 
+def step_accent_pass(job_dir: Path, state: dict) -> str | None:
+    """accent-pending → ready-to-publish: spawn accent subagent (manual / by main agent)."""
+    final_dir = job_dir / "final"
+    candidates = sorted(final_dir.glob("*.md"), key=lambda p: p.stat().st_mtime, reverse=True) if final_dir.exists() else []
+    if not candidates:
+        return "No article found in final/ — editorial-pass should have produced it"
+    return (
+        "accent-pass 需要主對話 spawn accent subagent。\n"
+        "請使用 Agent tool 啟動 general-purpose subagent，prompt 指向：\n"
+        f"  prompts/agent-accent.md\n"
+        f"  覆寫目標：{candidates[0]}\n"
+        "完成後 main agent 跑：\n"
+        f"  python3 scripts/run_editorial_pass.py {state['jobId']} --auto-advance\n"
+        "（PASS 且狀態為 accent-pending → 自動推進到 ready-to-publish）"
+    )
+
+
 def step_publish(job_dir: Path, state: dict) -> str | None:
     """ready-to-publish → published: needs repo + target path."""
+    if (job_dir / "final" / "argmap.yaml").exists() and not (job_dir / "final" / "argument.argdown").exists():
+        blocked = step_argdown(job_dir, state)
+        if blocked:
+            return blocked
+
     publish = state.get("publish", {})
     repo = publish.get("repo", "")
     target_file = publish.get("file", "")
@@ -145,6 +167,52 @@ def step_publish(job_dir: Path, state: dict) -> str | None:
     print(result.stdout)
     if result.returncode != 0:
         return f"Publish failed: {result.stderr}"
+    return None
+
+
+def step_argdown(job_dir: Path, state: dict) -> str | None:
+    """Generate, validate, and render final/argument.argdown from final/argmap.yaml."""
+    argmap = job_dir / "final" / "argmap.yaml"
+    if not argmap.exists():
+        return "No final/argmap.yaml found — run argmap pass first"
+
+    result = subprocess.run(
+        [sys.executable, str(SCRIPTS / "generate_argdown.py"), str(job_dir)],
+        capture_output=True,
+        text=True,
+    )
+    print(result.stdout)
+    if result.returncode != 0:
+        return f"Argdown generation failed: {result.stderr}"
+
+    validation = subprocess.run(
+        [sys.executable, str(SCRIPTS / "validate_argdown.py"), str(job_dir)],
+        capture_output=True,
+        text=True,
+    )
+    print(validation.stdout)
+    if validation.returncode != 0:
+        return f"Argdown validation failed: {validation.stderr}"
+
+    render = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPTS / "render_argdown_assets.py"),
+            str(job_dir),
+            "--output-dir",
+            str(job_dir / "final" / "argdown-render"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    print(render.stdout)
+    if render.returncode != 0:
+        return f"Argdown render failed: {render.stderr}"
+
+    state["lastDeliverable"] = "final/argdown-render"
+    versions = state.setdefault("versions", [])
+    versions.append({"note": "Generated, validated, and rendered Argdown export from argmap.yaml", "at": now_iso()})
+    save_state(job_dir, state)
     return None
 
 
@@ -195,6 +263,7 @@ NEXT_STEP: dict[str, callable] = {
     "fact-checking": None,  # needs human: complete fact-check-report
     "rewritten": step_editorial_pass,
     "editorial-pass": step_editorial_pass,
+    "accent-pending": step_accent_pass,  # needs main agent to spawn accent subagent
     "ready-to-publish": step_publish,
     "published": step_verify,
 }
@@ -206,6 +275,8 @@ NAMED_STEPS = {
     "integrate-research": step_integrate_research,
     "fact-check": step_fact_check,
     "editorial-pass": step_editorial_pass,
+    "accent-pass": step_accent_pass,
+    "argdown": step_argdown,
     "publish": step_publish,
     "verify": step_verify,
     "validate": step_validate,
@@ -214,6 +285,7 @@ NAMED_STEPS = {
 # Steps that need human input
 HUMAN_REQUIRED = {
     "fact-checking": "Complete fact-check-report.md, then update state to 'rewritten'",
+    "accent-pending": "Spawn accent subagent (prompts/agent-accent.md) → overwrite final/article-final.md → re-run editorial-pass",
     "blocked": "Resolve blocked reason, then update state",
     "needs-decision": "Make decision, then update state",
 }

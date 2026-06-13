@@ -1,0 +1,91 @@
+===
+title: 護照根的不可能性
+subTitle: Sovereignty-Root Paradox — Argument Map (v2)
+slug: 2026-05-05-passport-rooted-paradox
+author: research-article-pipeline argdown export
+model:
+  removeTagsFromText: true
+===
+
+# Central Thesis
+
+[Core Thesis]
+  + <Formal Core>
+  + [Accepted]
+  + <P1>
+  + <P2>
+  + <P3>
+  + <P4>
+  + <P5>
+  + <Causal Chain>
+  + [Deployment Conditions]
+  + <Conclusion>
+  - [Rejected]
+    - [Accepted]
+  + [Accepted]
+  - [Objection 1]
+    - <Reply 1>
+  + <Reply 1>
+  - [Objection 2]
+    - <Reply 2>
+  + <Reply 2>
+  - [Objection 3]
+    - <Reply 3>
+  + <Reply 3>
+
+[Core Thesis]: 把護照當作公民身分的最終根，等於把信任根放在隨時可成為敵手的主權容器內。當 Issuer 同時屬於該容器的 Adversary 集合，根的 Trust 屬性無法被滿足——SRP 是主權層級的合取結構失敗，並非密碼學失誤。解方落在 Multi-Rooted Civic Proof 把單一主權根降級為「四選一可退路」（廢除護照根並非選項）。 #thesis
+
+<Formal Core>: Formula SRP R ℛ sov I R Adv(T R) (R T R) MR-CivicProof T Rᵢ R₁, R₂, R₃, R₄ Rᵢ T compromised(Rᵢ, D₁ D₂ D₃) Caption SRP 是「主權根」這一類別的內建悖論 當 Issuer 屬於 Adversary 集合，Trust 屬性 T R 不可能被該根 R 滿足。MR-CivicProof 把信任從單一 R 拆成四個獨立來源 R₁..R₄，並用 D₁ D₂ D₃ 三條降級準則切換。 #formal
+
+[Accepted]: Multi-Rooted Civic Proof（四選一可退路）. 把單一主權根降級為四個獨立來源中的其中之一 R₁ 護照根（高效用、低韌性）、R₂ 社群根（中效用、中韌性）、R₃ 機構根（醫療 教育 UNHCR，中效用、中韌性）、R₄ 自托管根（低效用、高韌性）。任一根失效，其他三根可接續 D₁ D₂ D₃ 提供切換準則。 #accepted
+
+[Rejected]: 護照根作為公民身分最終根. 把 ICAO eMRTD PKI（CSCA DSC DG SOD）當作公民身分的「最終可信任根」。這個結構假設 Issuer（主權國家）永遠站在 Trust property 那一邊 但實際上 Issuer 隨時可以撤銷、降級、甚至武器化護照根，使其成為 Adversary。 #rejected
+
+<P1>: Title 三層架構 六項治理威脅 Section 2 — ICAO PKI 工程剖析 Role 提供工程根據——若 ICAO PKI 在密碼學層真的無懈可擊，「主權容器悖論」就只是社會學想像。但三層架構（CSCA DSC DG SOD）的每一層都有對應的治理威脅 D1-D4b，這些威脅不是假設，是已記錄的事件。 ICAO eMRTD PKI 三層架構 CSCA（國家簽發） DSC（文件簽證者） DG（資料群組） SOD（安全物件文件）。三代 ePassport 的安全宣稱只覆蓋第二代以後（zkPassport 也僅在此範圍內成立）。六項治理威脅 D1（CSCA 撤銷）、D2a（DSC 政治化撤銷）、D2b（DSC 工程錯誤）、D3（DG 內容篡改）、D4a（SOD 重簽）、D4b（離線驗證 cache 過期）。EU LoTL 與 ICAO 體系並行運作，但兩體系都假設 Issuer 不是 Adversary。 Finding 工程層 D1-D4b 構成 SRP 的具體攻擊向量 任何一個威脅實現都使 R T R 不成立。 Formal Dᵢ D1, D2a, D2b, D3, D4a, D4b realizes(Dᵢ) (R T R) #pillar
+
+<P2>: Title 8 案例 4 主形式 2 邊界形式 Section 3 — 武器化歷史證據 Role 提供反向證據——若無法證明「護照根會被主權武器化」，SRP 還只是理論可能性。8 個歷史案例在不同主權體制下重複出現同樣的 4 主形式 2 邊界形式，把理論可能性推上機制必然。 8 案例 USSR exit visa、Apartheid SA、緬甸 Rohingya、伊朗女記者、土耳其 Gülenist、香港 BN(O)、中國新疆、俄羅斯動員年齡男性。4 主形式 W1 撤銷護照、W2 拒發護照、W3 降級救濟文件、W4 跨境追蹤。2 邊界形式 W5 第三國協作（pp. Interpol Red Notice 濫用）、W6 假護照流通（朝鮮、伊朗）。救濟文件（refugee travel document、laissez-passer）在數位化過程中常被自動降級——這是 SA-4 設計準則的經驗根據。 Finding 武器化不是少數異常，是「主權容器內 Issuer Adversary」的可預期實現。但 W5 W6 是邊界形式，不能誤推為主形式。 Formal regime r USSR, SA, MM, IR, TR, HK, CN, RU Wⱼ weaponized(r, Wⱼ) #pillar
+
+<P3>: Title 主權容器的合取必要結構 Section 4 — SRP 形式化 Role 提供論證骨架——若沒有形式化，SRP 仍可被當作「特定政權的失敗」而非「主權容器類別本身的悖論」。形式化把論證從個案推到類別。 SRP 修訂版陳述 R ℛ sov I R Adv(T R) (R T R)。主權容器的三段重構 (1) Issuer 即 Adversary 屬於主權容器的內建可能性，並非偏差個案 (2) Trust 屬性是合取必要條件 T R T R₁ T R₂ T R₃，任一支柱失效全體失效 (3) 跨容器同構性——同樣的合取結構在 article 01 (V₁..V₆)、article 04 (T Trigger T Authority T Remedy)、article 05 (IT 不可能三角) 反覆出現。 Finding SRP 屬於「以單一主權容器作為公民根」的類別失敗，工程層級（如 ICAO PKI 設計）的修補無法解除這個結構性問題 要走出 SRP 必須換出主權根。 Formal T R T R₁ T R₂ T R₃ i compromised(T Rᵢ) T R #pillar
+
+<P4>: Title R₁..R₄ 四層信任根 三條降級準則 Section 5 — Multi-Rooted Civic Proof Role 提供替代設計可行性——若沒有具體可實作的替代，SRP 只是批判而非建構。R₁..R₄ 四層 D₁ D₂ D₃ 切換準則把 Multi-Rooted 從口號降到工程規範。 R₁ 護照根（ICAO PKI，高效用、低韌性，預設根） R₂ 社群根（DAO web of trust 公會證明，中效用、中韌性） R₃ 機構根（醫療紀錄 教育認證 UNHCR 文件，中效用、中韌性） R₄ 自托管根（PGP DID 自我宣告 證人，低效用、高韌性）。三條降級準則 D₁ 單根失效偵測（信號 撤銷頻率 閾值 政治關聯 閾值） D₂ 跨根一致性檢查（k-of-n 多根驗證） D₃ 救濟文件回退（當 R₁..R₃ 全失效時，R₄ 證人鏈）。與 article 05 SA-5 multi-rooted 方案接合，與 prompt 11 wallet-as-essential-facility 接合。 Finding 四根 三準則提供「逐步降級」而非「全有全無」的退路 但每往下一根，效用遞減、韌性遞增，不存在免費的多根。 Formal MR-CivicProof T Rᵢ Rᵢ T compromised(Rᵢ, D₁ D₂ D₃) #pillar
+
+<P5>: Title B1-B5 五條邊界 真實場景測試 Section 6 — 邊界條件與 UNHCR Iris in Jordan Role 提供誠實性——若不畫邊界，Multi-Rooted 會被誤推為「萬能解」。B1-B5 UNHCR Iris in Jordan 案例把 MR-CivicProof 的適用範圍精確標出。 B1 覆蓋率 vs 脆弱性 trade-off（覆蓋越廣的根越易被武器化） B2 無國籍者 一般跨境問題（範疇差異） B3 NGO 根與社群根的政治經濟（資金來源即影響獨立性） B4 UNHCR IOM 雙重 mandate 風險（人道與遣返同源） B5 自托管根對弱勢者的 4 重門檻（裝置 連網 識讀 私鑰托管）。UNHCR Iris in Jordan 是 R₃ 機構根的最佳案例 670 萬敘利亞難民虹膜 區塊鏈 voucher，但同樣面臨 B4 雙重 mandate 透明化問題。 Finding MR-CivicProof 在無國籍者、跨境難民、政治壓迫場景內成立 但對「具裝置能力 主權友好」的一般公民，R₁ 護照根仍是預設且效用最高選項。不能跨情境通用化。 Formal applicable(MR-CivicProof, ctx) ctx stateless, refugee, persecuted over general(ctx) #pillar
+
+<Causal Chain>: Title 主權根失效七步因果鏈 Issuer Adversary Trust 崩壞 T0 (deterministic) 主權國家設計 R₁（ICAO PKI），假設 I R₁ 永久站在 T R₁ 那一邊（結構性樂觀） T1 (deterministic) 政治情勢轉變（政變 制裁 異議者出走 種族清洗），I R₁ 進入 Adv(T R₁) 集合 T2 (deterministic) 工程能力被武器化（D1 CSCA 撤銷 D2a DSC 政治化 D3 DG 篡改） T3 (probabilistic) 武器化採取 W1-W4 主形式 撤銷護照 拒發護照 降級救濟文件 跨境追蹤 T4 (probabilistic) 第三國採取 W5（Interpol Red Notice 協作）或 W6（假護照流通）邊界形式 T5 (probabilistic) 公民失去 R₁，若無 R₂ R₃ R₄ 退路 流落、無國籍、政治受迫 T6 (probabilistic) 國際人道體系（UNHCR IOM）介入提供 R₃ 機構根，但受 B4 雙重 mandate 限制 #chain
+
+[Deployment Conditions]: MR-CivicProof 的合法部署，必須先通過五條邊界條件. deploy(MR-CivicProof) valid B₁ B₂ B₃ B₄ B₅ #conditions
+
+<C1>: Title B₁ 覆蓋率 vs 脆弱性 trade-off 覆蓋越廣的根越易被武器化（R₁ 護照根覆蓋全球公民但脆弱於主權，R₄ 自托管根覆蓋小但韌性高）。設計部署時必須明確標出每根的覆蓋-脆弱性點。 Formal B₁ Rᵢ coverage(Rᵢ) resilience(Rᵢ) k (Pareto frontier) #condition
+
+<C2>: Title B₂ 無國籍者 一般跨境問題（範疇差異） 無國籍者問題是 SRP 的極端情境（I R 不存在），跟一般跨境身分驗證問題不在同一個範疇。MR-CivicProof 在前者是必要救濟，在後者是冗餘設計。不能跨範疇通用化。 Formal B₂ scope(MR-CivicProof) stateless, refugee, persecuted high-risk-cross-border #condition
+
+<C3>: Title B₃ NGO 根與社群根的政治經濟 R₂ 社群根與 R₃ NGO 根的獨立性受資金來源限制——若 NGO 主要資金來自特定主權國家，該根對該國公民的可信度必然降低。設計時必須揭露資金結構。 Formal B₃ R₂ R₃ independence(R) funding diversity(R) #condition
+
+<C4>: Title B₄ UNHCR IOM 雙重 mandate 風險 國際人道組織同時承擔保護（refugee status）與遣返（return）兩種 mandate，這意味 R₃ 機構根對受保護者來說同時是工具與威脅。透明化雙重 mandate 是 R₃ 部署的前置條件。 Formal B₄ R₃ UNHCR, IOM transparent(dual mandate(R₃)) prerequired #condition
+
+<C5>: Title B₅ 自托管根對弱勢者的 4 重門檻 R₄ 自托管根對「無裝置 無連網 低識讀 無私鑰托管能力」的弱勢群體並不免費——把它當作 R₁ 失效後的「最後退路」會把責任甩給最沒能力承擔的人。R₄ 必須配合人道組織的「assisted self-custody」設計。 Formal B₅ deploy(R₄) assisted(device, network, literacy, key custody) #condition
+
+<Conclusion>: SRP 是「主權容器作為公民身分根」這一類別的內建悖論，工程層級（如 ICAO PKI 設計）的修補無法解除它。 解套要求把單一主權根降級為「四選一可退路」才能維持 Trust 屬性。 辯論應從「護照根 vs 自我主權」轉向 「在什麼條件下哪一根適用」 。MR-CivicProof 的價值落在 R₁ 失效時讓公民仍有根可用，對應到 article 04 的 T Remedy 與 article 06 的 D₂ 公平條件 R₁ 在 multi-rooted 設計中仍保留其原本的高效用位置。 一條退路原則貫穿全文 覆蓋率與韌性不可同時最大化，必須有可降級的多根。 越主權友好的根覆蓋越廣、越脆弱 越自托管的根越韌性、越窄門檻——這個梯度本身就是 MR-CivicProof 公式的必然延伸。 Formal Coda Final form SRP R ℛ sov I R Adv(T R) (R T R) MR-CivicProof T Rᵢ R₁, R₂, R₃, R₄ Rᵢ T compromised(Rᵢ, D₁ D₂ D₃) deploy valid ⱼ Bⱼ (j 1..5) #conclusion
+
+# Deployment Conditions
+
+[Deployment Conditions]
+  + <C1>
+  + <C2>
+  + <C3>
+  + <C4>
+  + <C5>
+
+# Objections And Replies
+
+[Objection 1]: ICAO PKI 已在主流文獻被視為穩固. 反論訴求是「ICAO PKI 是工程上經過驗證的根」。但這個「穩固」是相對於密碼學攻擊，而不是相對於 Issuer 自身的政治轉向。當主權國家撤銷 CSCA 或政治化 DSC 撤銷，密碼學層的穩固性正是讓武器化更精確的工具——亦即「穩固」這個工具屬性自身就違反 SRP 的核心關切（I R Adv(T R)）。 #objection
+
+<Reply 1>: Title ICAO PKI 已在主流文獻被視為穩固 ICAO PKI 的密碼學穩固性不僅不支持「護照根作為唯一根」，反而給「主權根的武器化將更精確」提供了最強論證——因此需要 R₂ R₃ R₄ 的非主權替代。 #reply
+
+[Objection 2]: zkPassport 已解決隱私問題. 反論訴求是「zkPassport age proof 等 ZK 應用已解決護照根的隱私洩漏」。但 zkPassport 解決的是「驗證隱私」，不是「撤銷武器化」——隱私保護無法防止 Issuer 撤銷你的根。換言之，zkPassport 與 SRP 是正交問題 zkPassport 在 R₁ 內解決部分問題，但 R₁ 整體仍受 SRP 約束。 #objection
+
+<Reply 2>: Title zkPassport 已解決隱私問題 zkPassport 解決一個重要但範圍有限的問題，卻無法吸收 SRP。這個結果反向支持「應將 zkPassport 視為 R₁ 內的 V privacy 子規格，而非 R₁ 整體的擔保」。 #reply
+
+[Objection 3]: 跨國治理體系不可能被取代. 反論的部分例外——但訴求過度延伸。「ICAO 不可能被取代」只在「全球公民身分驗證」這個窄場域成立，對「特定群體（無國籍 難民 政治受迫）的可信任根」並不必然成立。R₂ R₃ R₄ 的角色是在 R₁ 失效時提供退路，並未要求取代 ICAO。 #objection
+
+<Reply 3>: Title 跨國治理體系不可能被取代 即使 ICAO 不可能被取代，普世化「ICAO 是唯一根」也無法被辯護。MR-CivicProof 的適用範圍是「主權根失效的群體」，與「ICAO 對一般公民有效」並無矛盾——這恰好示範 B1-B5 邊界條件如何約束過度通用化。 #reply

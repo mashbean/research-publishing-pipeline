@@ -1,0 +1,97 @@
+===
+title: 我們試著用資料看身分制度與民主衰退的關係
+subTitle: ID-Authority Index Pilot — Argument Map (v2)
+slug: 2026-05-08-digital-identity-civic-action-quant
+author: research-article-pipeline argdown export
+model:
+  removeTagsFromText: true
+===
+
+# Central Thesis
+
+[Core Thesis]
+  + <Formal Core>
+  + [Accepted]
+  + <P1>
+  + <P2>
+  + <P3>
+  + <P4>
+  + <Causal Chain>
+  + [Deployment Conditions]
+  + <Conclusion>
+  - [Rejected]
+    - [Accepted]
+  + [Accepted]
+  - [Objection 1]
+    - <Reply 1>
+  + <Reply 1>
+  - [Objection 2]
+    - <Reply 2>
+  + <Reply 2>
+  - [Objection 3]
+    - <Reply 3>
+  + <Reply 3>
+
+[Core Thesis]: 本文是 pilot 量化研究，提出 ID-Authority Index（IAI）兩維 5 級編碼方案覆蓋 70 國，並由 APS AS (6 PS) 構造單一可回歸分數。Pilot estimates 顯示 APS 與 V-Dem v2x cspart 預期呈中度負相關（r 0.42，CI 0.58, 0.24 ），可拒絕「身分制度設計與結社自由統計獨立」的虛無假設 三個案例（Aadhaar 福利條件化 Russian Gosuslugi 戰時動員 制裁名單 Belarus e-ID 抗議者識別）證明武器化機制在混合政體中存在 但因果方向尚未被識別，五個 natural experiment 候選都帶 confounders，最佳的印度 Aadhaar State Year DID 仍與 BJP 政體性格的同期變化糾纏。誠實結論落在三段式 統計非獨立 機制存在性 因果未識別。 #thesis
+
+<Formal Core>: Formula IAI AS, PS where AS, PS 1, 2, 3, 4, 5 APS AS (6 PS) (range 1..30) Correlation hypothesis (pilot) country i Sample(N 70), Corr(APS i, v2x cspart i) 0.42 (pilot estimate, CI 0.58, 0.24 ) reject(H₀ APS Civic Space) sufficient(causal inference) Mechanism existence (3 cases) pathway welfare conditionality, mobilization sanction, surveillance identification country weaponized(IAI, pathway, hybrid regime) country (high AS weaponized) (control set JP, TW, EE, SE) IAI necessary condition hybrid regime critical mediator Causal identification (limited) clean IV(IAI, Civic Space) best candidate India Aadhaar State Year DID (confounded by BJP regime character) multi method triangulation(panel, DID, process tracing) required triangulation valid layer₁ layer₂ layer₃ (cross-national natural-experiment qualitative) Caption 公式分三層承重 兩維編碼是測量基礎 APS civic-space 的相關是統計非獨立宣告 機制存在性與因果未識別是並列限制條件。三層任一被弱化，pilot 的合法性即退化為單純假設。 #formal
+
+[Accepted]: 統計非獨立 機制存在性 因果未識別三段式. 本 pilot 能確立的最強主張落在三段式立場 (a) APS 與結社自由衰退在統計上預期非獨立（pilot estimate r 0.42），可拒絕統計獨立的虛無假設 (b) 至少存在三條「身分制度被武器化」的機制路徑（福利條件化 強制動員 制裁名單 監控 抗議者識別），三案例 四對照組共同支撐機制存在性與 IAI 非必要條件 (c) 因果方向的識別仍然有限，五個 natural experiment 都帶 confounders，最佳策略印度 Aadhaar State Year DID 仍與 BJP 政體性格的同期變化糾纏。三段並列才是合法的 pilot 立場——任一段被刪除，論證會偏向「過度推論」（刪 c）或「直覺修辭」（刪 a 或 b）。 #accepted
+
+[Rejected]: 「身分制度與結社自由統計獨立」的虛無假設. 量化政治科學的常見預設是把 V-Dem v2x cspart、Freedom House E2、CIVICUS 等結社自由代理變數與「身分制度設計」當成兩個獨立議題 前者由政體類型 經濟發展驅動，後者由技術可得性 數位治理偏好驅動。這個預設把「資料缺口」（既有跨國資料集對身分制度本身的設計未建立統一編碼）當成「議題不相關」的證據，使下游研究設計不主動把 IAI 類變數納入結社自由迴歸的自變量集合。pilot 的第一個任務是把這個虛無假設拒絕掉——以 70 國 IAI 編碼 5 個結社代理變數 控制變量回歸，預期 APS 主效應 β₁ 0 且 95% bootstrap CI 不含 0。拒絕統計獨立並不等於支持因果方向 下一段被辯護的命題正好標出兩者距離。 #rejected
+
+<P1>: Title 測量基礎（I 歸納） Section 2 — IAI 兩維 5 級編碼方案 70 國覆蓋 Role 提供測量基礎——若沒有可比較的編碼，APS 構造與下游回歸都失去承載對象。V-Dem v2x cspart、Freedom House E2、CIVICUS Monitor、ID4D 2024、DSP 等既有資料集對「公民如何被國家認證身分」並未建立統一的可比較編碼 IAI 的目的是填補這個空白而非取代既有指標。pillar 的辯護負擔是同時論證 (a) 為什麼需要新編碼 (b) 兩維 5 級量表為什麼比單一指標更穩健 (c) 70 國覆蓋為什麼支撐地區子群分析 (d) inter-coder reliability 設計如何控制主觀漂移。 IAI 拆成兩個正交軸 保證力強度（Assurance Strength, AS）與隱私強度（Privacy Strength, PS），每維 1-5 級，每維由 8 個 boolean 子條件組合決定層級，使主觀性聚焦於「子條件選擇」這個一次性決策。AS-1 至 AS-5 從「無國家強制 ID」到「生物特徵 政府單一根 全領域強制」（印度 Aadhaar、中國 Real-name、俄羅斯 e-Gov 為 AS-5） PS-1 至 PS-5 從「公開區塊鏈 ID 集中式生物資料庫 無撤銷」到「純假名 無 phone-home 限期保留 多方制衡」。70 國樣本分布於十個地區（西歐 北歐 12、中東歐 10、北美 大洋洲 4、拉美 10、東亞 6、東南亞 6、南亞 4、中東 6、非洲 8、後蘇聯 4），每地區至少 4 國以支撐子群分析。Inter-coder reliability 對 12 國（17%）做雙盲獨立編碼，目標 Cohen s κ 0.7（Landis Koch 1977 substantial agreement 標準），並對地區子群分別報告 κ。AS-PS Spearman ρ 0.45（pilot estimate），中度負相關意味著「高保證力 高隱私強度」設計在現實中較罕見，但兩維仍可分而非完全共線 APS AS (6 PS) 因此仍有獨立資訊。 Finding 70 國 IAI 編碼提供測量基礎，AS-PS 兩維中度負相關但可分 APS 構造保留獨立資訊，下游回歸可同時報告雙維主效應 APS 複合分數，避免單一壓縮丟失資訊。 Formal AS, PS 1..5 Spearman ρ(AS, PS) 0.45 (pilot estimate) APS AS (6 PS) 1, 30 #pillar
+
+<P2>: Title 統計非獨立的證據（I 歸納） Section 3 — APS civic-space 跨國回歸 pilot estimates Role 提供統計關聯的初步證據——若沒有跨國回歸，IAI 編碼會被當成「描述工具」而非「可被檢驗的測量設計」。pillar 的辯護負擔是同時論證 (a) 主要分析 specification 為什麼以 70 國橫斷迴歸 APS 主效應為核心 (b) 5 個結社代理變數方向一致為什麼比單一變數穩健 (c) 政體類型子群分析為什麼預期選舉威權效應最強 (d) 縱貫面板回歸為什麼補充橫斷分析 (e) 5 項敏感度分析為什麼必要 (f) 為什麼這些 pilot estimates 仍只能拒絕統計獨立而非支持因果。 主要分析是 70 國橫斷迴歸（2023 為基準年），因變量為 V-Dem v2x cspart（0-1 連續），自變量為 APS（1-30 連續），控制變量為 log(GDP)、政體類型（Lührmann 等 2018 RoW 4 分類）、網路普及率（ITU 2024）。預期 β₁ 0 且 95% bootstrap CI 不含 0 Pearson r 0.42（CI 0.58, 0.24 ，pilot estimate 待 RA 實際計算驗證）。5 個結社代理變數（v2x cspart、v2csreprss、v2cseeorgs、FH E2、CIVICUS Monitor 序數）預期方向一致 這 5 個變數彼此非完全獨立（V-Dem 三變數共享編碼專家來源），「方向一致」不能被當作 5 個獨立樣本驗證，但仍降低單一資料集偽相關疑慮。政體類型子群分析預期最強相關出現在選舉威權（RoW 2）國家，呼應 Diamond 2002 與 Levitsky-Way 2010 對 hybrid regime 的論點。縱貫面板回歸（2010-2023）以 two-way fixed-effects specification 預期 γ₁ 0，效應量 Δβ 0.004 至 0.010 年（pilot estimate）。5 項敏感度分析包括編碼替換、排除 outliers、替換 DV、加 FOTN 控制、SIMEX 測量誤差校正。所有 pilot estimates 都待 RA 跑實際統計驗證。 Finding APS 與 5 個結社代理變數預期方向一致的中度相關 子群分析預期選舉威權效應最強，可拒絕統計獨立的虛無假設 ecological fallacy、樣本選擇偏差、衰減偏差三項跨層級警示同時成立，相關 因果。 Formal v2x cspart i β₀ β₁ APS i β₂ log(GDP i) β₃ RoW i β₄ Internet i ε i Ĥ β₁ 0 (pilot, CI 0) #pillar
+
+<P3>: Title 因果評估而非結論（C 因果評估） Section 4 — 5 個 natural experiment 因果識別評估 Role 提供因果識別的審慎邊界——若沒有對 5 個 natural experiment 候選的逐條評估，pillar 3 的相關性結果會被讀者直覺升級為因果結論。pillar 的辯護負擔是同時論證 (a) DAG 分析為什麼顯示乾淨 IV 不存在 (b) 為什麼必須仰賴 natural experiment DID (c) 5 個候選的限制條件為什麼讓任一單一策略都不足以支撐因果 (d) Multi-method triangulation 三層為什麼是當前最低方法論標準。本 pillar 結論為「因果評估」而非「因果結論」 三段式立場的第三段（因果未識別）正是由本 pillar 承重。 對 IAI 結社自由的假設因果路徑做 DAG 分析 X IAI、Y 結社自由、R 政體類型、E 經濟發展、T 技術可得性、D 數位轉型政策、U 非觀察變數。主要後門路徑為 X R Y、X E Y、X D Y。要找乾淨 IV，需要影響 X 但不直接影響 Y 的變數 身分制度的設計選擇受國家政治結構深度影響，幾乎所有候選 IV 都會違反 exclusion restriction。5 個 natural experiment 候選評級如下 A 印度 Aadhaar 強制接入（2014-2017，State Year DID， ，最佳但 BJP 共因 confounded） B 歐盟 eIDAS 1.0 2.0 過渡（2014-2024， ，效應太弱 觀測時間短） C 中國 real-name 各省滾動推行（2012-2018， ，大樣本但威權國家結社自由測量失真） D 俄羅斯 Gosuslugi 戰時動員（2022-2024， ，戰時 confounders 太多） E 白俄羅斯 e-ID 2020 抗議（ ，N 太小）。Multi-method triangulation 三層設計 第一層跨國 panel 回歸（pillar 3） 第二層 natural experiment DID（首選 Strategy A） 第三層定性 process tracing（pillar 4 三案例）。三層結論一致時，才能對「IAI 結社自由衰退」做較強因果主張 任何單一層級都不足以支撐因果結論。 Finding 找不到乾淨 IV，5 個 natural experiment 都帶 confounders 最佳策略 Strategy A 印度 Aadhaar 仍與 BJP 政體性格糾纏，因果方向在 pilot 階段未識別，需要 multi-method triangulation 三層交叉支援。 Formal IV exclusion restriction(IV, IAI, Civic Space) triangulation valid panel layer DID layer process tracing layer #pillar
+
+<P4>: Title 機制存在性（C 機制證明） Section 5 — 三機制案例 四對照組 Role 提供武器化路徑的存在性證明——若沒有 case study，跨國回歸的相關性無法被翻譯為「機制如何發生」的具體圖像 對照組則防止從「機制存在性」滑向「機制必然性」。pillar 的辯護負擔是同時論證 (a) 三條 distinct 的因果鏈為什麼需要不同的程序防火牆設計 (b) 對照組（日本 台灣 Estonia 瑞典）為什麼證明 IAI 不是必要條件 (c) 中介變項（混合政體類型 缺乏制度防火牆）為什麼是武器化的關鍵 (d) 案例選擇偏差為什麼必須被明標。本 pillar 承擔三段式第二段（機制存在性）的核心支撐，並與 pillar 3 跨國回歸構成「統計非獨立 機制存在性」的雙層證據 機制存在 中介變項已標出，但全球頻率與必要性不被主張。 三案例提供 mechanism existence proof，展示具體途徑而不主張全球頻率。Case 1 印度 Aadhaar 福利條件化（2014-2024） 2009 UIDAI 設立、2014 BJP 上台後強制 PDS NREGA 銀行帳戶接入、2017-2020 數百萬人因 biometric authentication failure 失去福利、反對派活動人士的 Aadhaar 被選擇性「凍結」、結社自由整體衰退。本文採取「Aadhaar 與其他結社限縮政策共同出現」立場，不主張單一歸因（CAA 2019、UAPA 修法 2019、FCRA 修正 2020 為共因）。Case 2 俄羅斯 Gosuslugi 戰時動員（2022-2024） Gosuslugi 被用於電子動員召集令送達、異議者制裁名單、出境限制 Memorial 等公民組織 2022 被強制解散，成員失去 Gosuslugi 多項服務。Case 3 白俄羅斯 e-ID 2020 抗議 警方使用 e-ID 資料庫識別抗議者，識別後追蹤、解雇、起訴 e-ID 持有者被起訴比例顯著高於無 e-ID。四對照組（日本 My Number、台灣晶片身分證、Estonia e-ID、瑞典 BankID）顯示「高 AS 但未武器化」存在，因此 IAI 不是必要條件，需要中介變項（混合政體類型 缺乏制度防火牆）。三案例的因果鏈不同 福利條件化需要高強制接入 福利依賴 強制動員需要即時通知 法律承認電子送達 監控識別需要生物特徵 集中式查詢。每條路徑需要獨立的程序防火牆設計，呼應 article 01 的 V₁..V₆。 Finding 三案例 四對照組共同支撐機制存在性與 IAI 非必要條件 混合政體類型 制度防火牆缺失是武器化的關鍵中介變項 三條 distinct 因果鏈呼應 article 01 V₁..V₆ 的程序防火牆設計。 Formal pathway welfare cond, mob sanction, surveillance ID country weaponized(IAI, pathway) country (high AS weaponized) IAI necessary hybrid regime critical mediator #pillar
+
+<Causal Chain>: Title Pilot 推理鏈六步——跨國資料缺口 IAI 編碼方案 APS 構造 預期相關 機制存在性 因果未識別 T0 (deterministic) 跨國資料缺口階段 V-Dem v14、Freedom House FIW 2024、CIVICUS Monitor、World Bank ID4D 2024、Digital Society Project 等既有跨國資料集，對「公民如何被國家認證身分」並未建立統一的可比較編碼。V-Dem 變數捕捉「結社空間」與「數位治理」整體輸出 ID4D 提供「ID 覆蓋率 類型 生物特徵採集」但未把保證力與隱私區分開來 DSP 聚焦於政府監控與審查行為而非身分制度本身。pilot 的測量設計起點是這個資料缺口，並非取代既有指標。 T1 (deterministic) IAI 編碼方案 兩維 5 級量表 每維 8 個 boolean 子條件 70 國覆蓋 inter-coder reliability 對 12 國（17%）做雙盲獨立編碼，目標 Cohen s κ 0.7 地區子群分別報告 κ 以避免「全域 κ 高但某地區內部分歧大」的隱性測量誤差。AS-PS Spearman ρ 0.45 顯示兩維中度負相關但可分。 T2 (deterministic) APS 構造 APS AS (6 PS)，理論值域 1-30 數值越高代表「高國家保證力 低個人隱私韌性」越極端。構造目的是把兩維壓縮成單一可回歸分數，但這個壓縮會丟失資訊 下游分析建議同時報告 APS 主效應 AS PS 互動效應，並以 SIMEX correction 緩解測量誤差傳播。 T3 (probabilistic) APS civic-space 預期相關 70 國橫斷迴歸 5 個結社代理變數方向一致 政體類型子群分析預期選舉威權效應最強 縱貫面板回歸 5 項敏感度分析。Pearson r 0.42（CI 0.58, 0.24 ，pilot estimate 待 RA 實際計算驗證）。預期結果可拒絕統計獨立的虛無假設，但不能支持因果方向。 T4 (probabilistic) 機制存在性已記錄 三案例（Aadhaar 福利條件化 Russian Gosuslugi 戰時動員 Belarus e-ID 抗議識別）提供 mechanism existence proof 四對照組（日本 台灣 Estonia 瑞典）提供「高 AS 但未武器化」反例，使 IAI 非必要條件、中介變項（混合政體類型 制度防火牆缺失）成為武器化的關鍵。三案例都是已記錄案例，全球頻率仍待更系統性的隨機案例選擇驗證。 T5 (probabilistic) 因果未識別 DAG 分析顯示乾淨 IV 不存在 5 個 natural experiment 候選都帶 confounders 最佳策略 Strategy A 印度 Aadhaar State Year DID 仍與 BJP 政體性格糾纏。Multi-method triangulation 三層設計（panel DID process tracing）是當前最低方法論標準 三層結論一致時才能對因果作較強主張。pilot 立場明確標出這一段為「研究議程」而非「研究結論」。 #chain
+
+[Deployment Conditions]: Pilot 後續研究議程——multi-method triangulation 三層 五項敏感度分析 七項 RA 後續任務. pilot extension valid triangulation layers sensitivity analyses RA followups triangulation layers panel layer DID layer process tracing layer sensitivity analyses S₁ S₂ S₃ S₄ S₅ RA followups ₖ ₁⁷ RA k #conditions
+
+<C1>: Title L₁ 跨國 panel 回歸（multi-method triangulation 第一層） 70 國橫斷迴歸 縱貫面板回歸 5 個結社代理變數方向一致 政體類型子群分析。提供統計關聯與政體子群差異，但不主張因果。本層的有效性以 IAI 編碼測量誤差被控制（SIMEX correction） V-Dem 三變數共相關被認知為前提。 Formal L₁ panel regression(70 countries, 2010-2023) reject(H₀) support(causal) #condition
+
+<C2>: Title L₂ Natural experiment DID（multi-method triangulation 第二層） 首選 Strategy A 印度 Aadhaar State Year DID（ ，最佳但 BJP 共因 confounded），輔以 Strategy C 中國 real-name 各省滾動推行（ ，大樣本但測量失真）。提供條件性因果證據 本層的有效性以 BJP 共因 process tracing 威權國家 multilevel measurement model 校正為前提。 Formal L₂ DID(India Aadhaar State Year China real name provincial) conditional causal confounder disclosure required #condition
+
+<C3>: Title L₃ 定性 process tracing（multi-method triangulation 第三層） 三案例（Aadhaar 福利條件化 Russian Gosuslugi 戰時動員 Belarus e-ID 抗議識別） 四對照組（日本 台灣 Estonia 瑞典）的系統性 process tracing。提供機制存在性與 IAI 非必要條件證據 本層的有效性以 Bennett Checkel 2015 process tracing 標準（hoop test smoking gun doubly decisive）為前提。 Formal L₃ process tracing(3 cases 4 controls) mechanism existence IAI necessary #condition
+
+<C4>: Title S₁..S₅ 五項敏感度分析 S₁ 編碼替換 將 IAI 替換為 V-Dem digital society project 既有變數（v2smgovsm、v2smgovshut 組合），檢查結論一致性。S₂ 排除 outliers 去除 IAI 極端值國家（如印度、中國），檢查結論。S₃ 替換 DV 用 BTI（Bertelsmann Transformation Index）取代 V-Dem，檢查結論。S₄ 加入 FOTN（Freedom on the Net）控制 檢查 APS 效應是否被網路自由吸收。S₅ SIMEX measurement error correction 對 IAI 編碼測量誤差做 simulation extrapolation 校正。任一敏感度分析顯示結論翻轉，pilot estimates 應被重新校準。 Formal Sensitivity S₁ S₂ S₃ S₄ S₅ k flipped(S k) recalibrate(pilot estimates) #condition
+
+<C5>: Title RA₁..RA₃ 量化執行（70 國 IAI 編碼 DID specification multilevel measurement） RA₁ 70 國 IAI 編碼資料集開源 multi-coder reliability test（建議 CC-BY-SA GitHub repository 雙盲編碼工作流 codebook 版本管理）。RA₂ 印度 Aadhaar State Year DID 完整 specification 跑出實際 effect size，包含 BJP 共因 process tracing。RA₃ 5 個結社代理變數的 multilevel measurement model 校正 APS 構造的 SIMEX measurement error correction。三項合起來把 pilot estimates 升級為實際估計，使 L₁ 與 L₂ 兩層的結論可被驗證。 Formal RA quant RA₁ RA₂ RA₃ pilot estimates actual estimates RA quant complete #condition
+
+<C6>: Title RA₄..RA₅ 訪談 質性深化（V-Dem 編碼專家 Aadhaar 個案 Belarus NGO） RA₄ V-Dem 編碼專家對 IAI 編碼方法論的回饋 ID4D 資料負責人對 70 國覆蓋的補強。RA₅ Aadhaar 個案研究者對 mechanism case 的細節 白俄羅斯人權 NGO 對抗議者識別實況。兩項合起來補強 L₃ process tracing 的證據強度，並對「未武器化」對照組的 unobserved counterfactual 做更主動驗證。 Formal RA qual RA₄ RA₅ process tracing strength RA qual complete #condition
+
+<C7>: Title RA₆..RA₇ 法律分析（Puttaswamy 判決 Mobilization Law e-ID 法律基礎） RA₆ 印度最高法院 2018 Puttaswamy v. Union of India 判決對 Aadhaar 強制接入的精確效力（5 人庭以 4 1 維持 Aadhaar Act 整體合憲，限縮銀行 SIM 學校的強制接入，保留福利接入 2017 Puttaswamy I 9 人庭確立隱私為基本權）。RA₇ 俄羅斯 Mobilization Law 2022 修正對 Gosuslugi 戰時動員的法律基礎 白俄羅斯 e-ID 對抗議者識別的法律依據。兩項合起來把武器化路徑的法律對接點精確化，使政策含意可被翻譯為具體法律抗辯設計（呼應 article 04 T Trigger）。 Formal RA legal RA₆ RA₇ legal remediation design RA legal complete #condition
+
+<C8>: Title 政策含意——IAI 兩維編碼作為國家自評工具 IAI 兩維編碼可作為國家數位身分政策的 self-assessment 工具。高 AS 設計必須伴隨高 PS 設計（多方持鑰、ZK、限期保留）。混合政體國家引入高 AS 系統前必須先檢驗政體韌性（司法獨立性、公民社會強度）。程序防火牆 V₁..V₆（呼應 article 01）應作為 ID 系統設計的最低門檻。70 國 IAI 編碼開源後可成為跨國比較基礎設施 multi-method triangulation 是處理 ID 民主議題的最低方法論標準 pilot estimates 與實際結果的差距是可量化研究問題。 Formal policy implication country (high AS proposal) require(high PS regime resilience check V₁..V₆ floor) #condition
+
+<Conclusion>: 本 pilot 能確立的最強主張落在三段式 APS 與結社自由衰退在統計上預期非獨立，且至少存在三條可被武器化的機制路徑 但因果方向尚未被識別。 三段並列才是合法的 pilot 立場——任一段被刪除，論證會偏向「過度推論」（刪因果未識別）或「直覺修辭」（刪統計非獨立或機制存在性）。pilot estimate r 0.42（CI 0.58, 0.24 ）可拒絕「身分制度設計與結社自由統計獨立」的虛無假設 三案例（Aadhaar 福利條件化 Russian Gosuslugi 戰時動員 Belarus e-ID 抗議識別） 四對照組（日本 台灣 Estonia 瑞典）共同支撐機制存在性 IAI 非必要條件 混合政體為關鍵中介變項 5 個 natural experiment 候選都帶 confounders，最佳策略 Strategy A 印度 Aadhaar State Year DID 仍與 BJP 政體性格糾纏，因果方向需要 multi-method triangulation 三層交叉支援才能作較強主張。 跨層級原則貫穿全文 身分制度與結社自由的關係屬條件性結構，pilot 立場可學的對象限於方法論層（編碼方案 識別策略 機制證據三層基礎），結論層仍待 RA 後續工作。 當 multi-method triangulation 三層交叉一致時，因果主張可被支撐 當 IAI 編碼開源 multi-coder reliability 達標時，測量基礎可被擴充 當混合政體 缺乏制度防火牆兩個中介變項並存時，APS 武器化的概率上升。對政策制定者而言，IAI 兩維編碼可作為國家數位身分政策的 self-assessment 工具，高 AS 設計必須伴隨高 PS 設計，混合政體國家引入高 AS 系統前必須先檢驗政體韌性。對研究社群而言，70 國 IAI 編碼開源後可成為跨國比較基礎設施，multi-method triangulation 是處理 ID 民主議題的最低方法論標準。 本文與系列其他文章在合取結構上同構，但用於不同層級。 三條武器化路徑（福利條件化 強制動員 監控識別）需要不同的程序防火牆設計，呼應 article 01 V₁..V₆（Aadhaar 違反 V₅ 多方持鑰 Russian Gosuslugi 違反 V₄ 日落條款 Belarus e-ID 違反 V₆ 事後審計）。IAI 兩維對應 article 02 𝒩 矩陣的 M₁ 存在性 M₂ 資格性 M₄ 隱私衡量。article 04 T Trigger 救濟條款應對 Aadhaar 福利條件化武器化 觸發條件、權力分配、救濟路徑三件式可移植到 ID 武器化的法律抗辯設計。article 06 CB-Justice D₂ 民主公民身分對應印度福利條件化排除的政治哲學基礎。article 07 SRP 主權容器內 ID 武器化與 IAI 高 AS 低 PS 同構（主權國家可同時是 issuer 與 adversary）。article 08 HM 歷史前提「政體類型」決定 IAI 武器化可能性（呼應 P DNS P ID 結構）。article 09 NCT「高 AS 低 PS 商業壟斷 民主政體 infrastructural tyranny」與本文「高 AS 低 PS 政府主導 混合政體 結社限縮」構成對偶結構 商業 vs 政府主導者、民主 vs 混合政體類型，但結果都是公民失去進入民主基礎設施的能力。合取結構在不同文章中作為共用骨架，使 pilot 落在公約系列的一個位置（孤立讀法則錯過了同構脈絡）。 Formal Coda Final form IAI AS, PS where AS, PS 1, 2, 3, 4, 5 APS AS (6 PS) (range 1..30) Correlation hypothesis (pilot) country i Sample(N 70), Corr(APS i, v2x cspart i) 0.42 (pilot estimate, CI 0.58, 0.24 ) reject(H₀ APS Civic Space) sufficient(causal inference) Mechanism existence (3 cases) pathway welfare conditionality, mobilization sanction, surveillance identification country weaponized(IAI, pathway, hybrid regime) country (high AS weaponized) (control set JP, TW, EE, SE) IAI necessary condition hybrid regime critical mediator Causal identification (limited) clean IV(IAI, Civic Space) best candidate India Aadhaar State Year DID (confounded by BJP regime character) multi method triangulation(panel, DID, process tracing) required triangulation valid layer₁ layer₂ layer₃ Pilot extension validity pilot extension valid triangulation layers sensitivity analyses RA followups triangulation layers panel layer DID layer process tracing layer sensitivity analyses S₁ S₂ S₃ S₄ S₅ RA followups RA quant RA qual RA legal (7 tasks) Cross-article coupling (合取結構在不同層級的同構) article 01 V₁..V₆ (Aadhaar V₅ Gosuslugi V₄ Belarus e-ID V₆) article 02 𝒩. M₁, M₂, M₄ article 04 T Trigger (welfare conditionality remediation) article 06 CB-Justice.D₂ article 07 SRP (sovereign issuer adversary, IAI high AS low PS isomorphism) article 08 HM (regime type historical precondition for weaponization) article 09 NCT (commercial democracy dual to government hybrid regime) #conclusion
+
+# Deployment Conditions
+
+[Deployment Conditions]
+  + <C1>
+  + <C2>
+  + <C3>
+  + <C4>
+  + <C5>
+  + <C6>
+  + <C7>
+  + <C8>
+
+# Objections And Replies
+
+[Objection 1]: 「相關必為因果」（過度延伸論）. 反論訴求是 pilot estimate r 0.42 已是中度相關，5 個結社代理變數方向一致，政體子群分析顯示選舉威權效應最強，縱貫面板回歸預期 γ₁ 0 既然多個方向都指向 APS civic space ，為什麼不能直接主張因果？讀者直覺把「方向一致 控制變量後 β 仍顯著」當作因果證據，特別當機制案例（pillar 4）已記錄具體武器化途徑，似乎已滿足 inference to the best explanation 的條件。在政策圈與媒體溝通脈絡中，這條過度延伸的壓力尤其強烈——「身分制度導致民主衰退」是傳播友善的命題，「身分制度與民主衰退在統計上非獨立 機制存在 因果未識別」是傳播不友善的命題。 #objection
+
+<Reply 1>: Title 「相關必為因果」（過度延伸論） 反論恰好凸顯「降一級語氣」的合理性。三項跨層級警示已標出相關升級為因果的具體障礙 ecological fallacy（國家層級平均 APS 與平均結社自由的相關，不能直接推論到個體層級） 樣本選擇偏差（70 國代表「資料可觀察的全球 ID 制度」，朝鮮、土庫曼等資料稀薄國家被排除，可能使結論保守） 衰減偏差（IAI 測量誤差使 β 系統性低估，actual effect size 可能比 pilot estimate 更大但仍不等於因果）。DAG 分析顯示乾淨 IV 不存在，三條主要後門路徑（X R Y、X E Y、X D Y）使單純的相關性結果無法區分「IAI 驅動 civic space」與「政體類型同時驅動兩者」。反論揭露的傳播壓力，正好成為地圖立場「方法論建立 結論建立」的根據——pilot 的合法性不在於「給出因果結論」，而在於「把編碼方案 識別策略 機制證據三層基礎建立起來，使後續 RA 能在這個基礎上跑實際統計」。 #reply
+
+[Objection 2]: 「沒有實際統計 沒研究價值」（pilot 質疑論）. 反論訴求是本文所有 r、ρ、Δβ 都是 pilot estimates 而非實際計算結果 70 國 IAI 編碼尚未跑完整 inter-coder reliability test 5 個 natural experiment 都未真正執行 DID specification 三案例屬於 illustrative case study 而非系統性 process tracing。批評者進一步質疑 「既然量化結果是預期值，為什麼要以量化研究的形式發表？直接寫成研究計畫書（research proposal）不就好了嗎？」在量化政治科學的同行評審傳統中，這條反論有強烈的方法論正當性——以 effect size 錨點代替實際估計，邊界容易模糊。 #objection
+
+<Reply 2>: Title 「沒有實際統計 沒研究價值」（pilot 質疑論） 反論誤把「pilot research」與「研究計畫書」當成同一物。pilot 的合法性建立在「方法論建立 結論建立」這個明確切分上，但與 research proposal 不同的是 pilot 已完成測量設計（IAI 兩維 5 級量表 8 子條件 70 國覆蓋 inter-coder reliability 設計）、識別策略（DAG 分析 5 個 natural experiment 評級）、機制證據（三案例 四對照組）三層具體工作，並引用既有相似研究（Khera 2019、Helm 2024、Schiff et al. 2023）的 effect size 作為錨點，使預期值有經驗約束。本文每次給出量化數值都已標 pilot estimate 待 RA 實際計算驗證，沒有把預期值當成實際結果報導。反論揭露的「pilot 邊界容易模糊」要求，正好成為地圖立場 6.1 五項限制與 6.2 RA 後續任務清單的根據 pilot 的工作位置落在「把後續可被檢驗的研究議程精確化」這個任務上（失敗因果研究的讀法忽略了 pilot 的方法論承擔）。pilot 立場可學的對象限於方法論層 結論層仍待 RA 後續工作。 #reply
+
+[Objection 3]: 「Aadhaar 是 BJP 政體性格而非 ID 制度」（單一歸因反論）. 反論訴求是印度 Aadhaar 的武器化（福利條件化、反對派活動人士 Aadhaar 凍結、CAA 2019、UAPA 修法 2019、FCRA 修正 2020）與 2014 BJP 上台同期 嚴格來說 Aadhaar 武器化是 BJP 政體性格的一個面向，而非「Aadhaar 制度本身導致結社限縮」。Strategy A 印度 Aadhaar State Year DID 雖以邦級異質性提供識別策略，但同期 BJP 主導邦推進 Aadhaar 與其他結社限縮政策的相關度過高，DID 的平行趨勢假設可能違反——強制接入時間內生於邦政治。把 Aadhaar 視為單獨因果變數，會誤讀印度政治經濟的結構。 #objection
+
+<Reply 3>: Title 「Aadhaar 是 BJP 政體性格而非 ID 制度」（單一歸因反論） 反論恰好點到本文 4.2 與 5.2 已明標的 confounder 結構，並未推翻三段式立場。本文採取「Aadhaar 與其他結社限縮政策共同出現」的立場，不主張單一歸因 CAA 2019、UAPA 修法 2019、FCRA 修正 2020 已被列入共因清單。Strategy A 評級為 而非 ，正是因為 BJP 共因 confounded 已被點名 這是「最佳但仍受限」的識別策略，不是「乾淨」的識別策略。Multi-method triangulation 三層設計（panel DID process tracing）的存在意義，正是處理這類共因問題 跨國 panel 提供統計關聯但不主張因果 natural experiment DID 提供條件性因果證據但仍受 BJP 共因限制 定性 process tracing 對「Aadhaar 機制路徑」與「BJP 其他政策路徑」做機制區分。三層交叉一致時才能對因果作較強主張。反論揭露的「單一歸因危險」要求，正好成為地圖立場「機制存在性 因果證明」與「對照組（日本 台灣 Estonia 瑞典）證明 IAI 非必要條件 混合政體為關鍵中介變項」的根據——三條 distinct 因果鏈各需要不同的程序防火牆設計（呼應 article 01 V₁..V₆），使「Aadhaar 是 BJP 性格」與「Aadhaar 是 ID 制度武器化的一個案例」兩個讀法可以並存而不互斥。 #reply

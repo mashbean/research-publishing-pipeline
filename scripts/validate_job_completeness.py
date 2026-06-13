@@ -70,16 +70,19 @@ REQUIRED_FILES: dict[str, list[str]] = {
 def glob_check(job_dir: Path, pattern: str) -> bool:
     """Check if a glob pattern matches any file."""
     if "*" in pattern:
-        parent = job_dir / Path(pattern).parent
-        glob_part = Path(pattern).name
-        return bool(list(parent.glob(glob_part))) if parent.exists() else False
+        return bool(list(job_dir.glob(pattern)))
     return (job_dir / pattern).exists()
 
 
 def validate(job_dir: Path, status: str | None = None) -> dict:
     state = load_state(job_dir)
     check_status = status or state["status"]
-    required = REQUIRED_FILES.get(check_status, [])
+    required = list(REQUIRED_FILES.get(check_status, []))
+    if check_status in {"ready-to-publish", "published", "verified", "social-shared"}:
+        if (job_dir / "final" / "argmap.yaml").exists():
+            required.append("final/argument.argdown")
+            required.append("final/argdown-render/*/index.html")
+            required.append("final/argdown-render/*/map.svg")
 
     present = []
     missing = []

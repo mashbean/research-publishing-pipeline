@@ -8,8 +8,9 @@
 
 ```
 intake → scoped → researching → evidence-mapped → drafted →
-fact-checking → rewritten → editorial-pass → ready-to-publish →
-published → verified
+fact-checking → rewritten → editorial-pass →
+[argmap-pending] →                                  # 可選，僅 civic-proof / opt-in
+ready-to-publish → published → verified → social-shared
 ```
 
 例外狀態：
@@ -71,8 +72,17 @@ published → verified
 - 文字順序、標題、首段、節奏完成
 - 沒有 prompt 洩漏或 PDF 腔
 
+### argmap-pending（可選，僅 civic-proof 系列或 `generate_argmap: true`）
+- `final/argmap.yaml` — v2 schema 完整
+- `final/argument.argdown` — 由 `final/argmap.yaml` deterministic 轉換而來
+- `final/argdown-render/<slug>/index.html` + `map.svg` — Argdown CLI 靜態渲染
+- python yaml.safe_load 可解析
+- Argdown CLI JSON/HTML/SVG map export 可解析（`validate_argdown.py` / `render_argdown_assets.py`）
+- slug 欄位與 article report id 完全一致
+
 ### ready-to-publish
 - `final/*.md` — frontmatter 完整
+- 若觸發 argmap 則 `final/argmap.yaml` 已通過 yaml 驗證，且 Argdown source/render 已產生
 - publish checklist 通過
 
 ### published
@@ -85,6 +95,11 @@ published → verified
 - deploy success
 - live URL 200
 - live title / lead / canonical 行為正確
+
+### social-shared
+- `social/facebook.md` — Facebook 長版分享文（300-500 字）
+- `social/threads.md` — Threads 短版分享文（200 字以內）
+- 兩份檔案皆含 YAML frontmatter（platform, article_title, canonical_url, generated_at）
 
 ## 工作分層
 
@@ -116,8 +131,10 @@ published → verified
 | researching → evidence-mapped | `run_deep_research.py integrate` | 自動整合結果 |
 | drafted → fact-checking | `run_pipeline.py next` | 半自動（需人工 review） |
 | rewritten → editorial-pass | `run_editorial_pass.py --auto-advance` | 自動檢查 + 推進 |
+| argmap.yaml → argument.argdown/render | `run_pipeline.py <job-id> argdown` | 自動格式轉換 + CLI parser 驗證 + HTML/SVG 渲染，不新增 claim |
 | ready-to-publish → published | `publish_blog_entry.py` | 自動（git + state） |
 | published → verified | `verify_publish.py` | 自動（HTTP + state） |
+| verified → social-shared | subagent (agent-social.md) | 自動產生 FB + Threads 分享文 |
 
 ## 多代理建議
 
@@ -125,6 +142,7 @@ published → verified
 - `writer`：research draft、blog rewrite
 - `critic`：fact-check、找過度主張與 citation 斷點
 - `editor`：標題、首段、順稿、壓縮、語氣
+- `social`：根據已發佈文章產出 Facebook + Threads 分享文
 - `main`：狀態推進、repo 操作、發稿驗證
 
 ## 自動續推原則

@@ -26,7 +26,8 @@
 
 當 job 狀態進入下列任一條件時，系統應更新 `memory/automation-state.json` 並退出 active 模式：
 
-- `verified`
+- `social-shared`（完整流程結束，含社群分享文產出）
+- `verified`（文章上線但跳過社群分享）
 - `publish-failed`
 - `verification-failed`
 - `blocked`

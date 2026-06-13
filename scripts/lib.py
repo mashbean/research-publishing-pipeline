@@ -15,19 +15,21 @@ FORWARD_TRANSITIONS: dict[str, list[str]] = {
     "researching": ["evidence-mapped"],
     "evidence-mapped": ["drafted"],
     "drafted": ["fact-checking"],
-    "fact-checking": ["rewritten", "researching"],       # backtrack: evidence gaps
-    "rewritten": ["editorial-pass", "fact-checking"],    # backtrack: new claims
-    "editorial-pass": ["ready-to-publish", "rewritten"], # backtrack: major issues
+    "fact-checking": ["rewritten", "researching"],          # backtrack: evidence gaps
+    "rewritten": ["editorial-pass", "accent-pending", "fact-checking"],    # PASS → accent-pending; FAIL → editorial-pass
+    "editorial-pass": ["accent-pending", "rewritten"],      # FAIL fix → re-pass → accent-pending
+    "accent-pending": ["ready-to-publish", "rewritten"],    # accent done → ready; major issue → back to rewrite
     "ready-to-publish": ["published"],
     "published": ["verified", "publish-failed"],
-    "verified": [],
+    "verified": ["social-shared"],
+    "social-shared": [],
 }
 
 # Any status can go to these exception states
 EXCEPTION_STATES = {"blocked", "needs-decision", "publish-failed", "verification-failed"}
 
 # Terminal states
-TERMINAL_STATES = {"verified", "publish-failed", "verification-failed", "blocked"}
+TERMINAL_STATES = {"social-shared", "verified", "publish-failed", "verification-failed", "blocked"}
 
 ALL_STATUSES = set(FORWARD_TRANSITIONS.keys()) | EXCEPTION_STATES
 
