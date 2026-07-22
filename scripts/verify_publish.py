@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -10,10 +11,25 @@ from urllib.request import Request, urlopen
 from lib import resolve_job_dir, load_state, save_state, now_iso
 
 
-def fetch_text(url: str, limit: int = 4000) -> str:
+def fetch_text(url: str, limit: int = 65536) -> str:
     req = Request(url, headers={"User-Agent": "OpenClaw research-publishing-pipeline/1.0"})
-    with urlopen(req, timeout=20) as resp:
-        return resp.read(limit).decode("utf-8", errors="replace")
+    try:
+        with urlopen(req, timeout=20) as resp:
+            return resp.read(limit).decode("utf-8", errors="replace")
+    except Exception as urllib_error:
+        try:
+            result = subprocess.run(
+                [
+                    "curl", "--fail", "--location", "--silent", "--show-error",
+                    "--max-time", "20", "--user-agent",
+                    "OpenClaw research-publishing-pipeline/1.0", url,
+                ],
+                check=True,
+                capture_output=True,
+            )
+            return result.stdout[:limit].decode("utf-8", errors="replace")
+        except (subprocess.CalledProcessError, FileNotFoundError) as curl_error:
+            raise RuntimeError(f"urllib failed: {urllib_error}; curl failed: {curl_error}") from curl_error
 
 
 def main() -> int:
