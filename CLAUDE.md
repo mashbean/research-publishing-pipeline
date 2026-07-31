@@ -246,6 +246,21 @@ python3 scripts/run_pipeline.py <job-id> publish
 python3 scripts/run_pipeline.py <job-id> verify
 ```
 
+**Deploy run 以 commit SHA 認定**。push 後 GitHub 要數秒才註冊新 run，所以
+「最新一筆 run」通常還是上一個 commit 的（2026-07-30 就這樣把 9 小時前的舊 build
+記成本次 deploy，verify 讀到綠燈但線上是 404）。`publish_blog_entry.py` 改成輪詢
+`headSha == commitSha`，認不到就留空並印 WARNING，**不回退到最新一筆**。
+
+`verify_publish.py` 會重新依 SHA 認定 run（不信 state 裡的 `deployRun`）、等它跑完，
+然後獨立檢查線上頁面是否含標題**與一段取自內文的特徵字串**。判定以線上內容為準：
+deploy 綠燈但頁面沒有本文 → `verification-failed` 並記下 `contradiction`。
+
+常用旗標：`--no-deploy-check`（跳過 gh）、`--expect <字串>`（追加特徵字串）、
+`--deploy-timeout`、`--retries`。publish 端：`--deploy-workflow <name>`（多 workflow
+的 repo 指定哪一個是 deploy）、`--deploy-run-timeout`、`--no-deploy-run`。
+
+測試：`python3 -m unittest discover -s tests`
+
 **若有 `final/argmap.yaml`**：發稿時 publish 腳本必須把它一併推到
 `external/blog-pro/src/content/argmaps/<slug>.yaml`，與 report 在同一個 commit
 （或同一個 gh api PUT 批次）。argmap collection 用 glob loader 自動 pick up，

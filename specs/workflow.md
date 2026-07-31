@@ -89,12 +89,16 @@ ready-to-publish → published → verified → social-shared
 - `publish/publish-record.json` — commit SHA + deploy run
 - commit + push 完成
 - deploy 已開始
+- `deployRunSha == commitSha`（run 以 SHA 認定，非「最新一筆」）。
+  認不到 run 時 `deployRun` 留空並記 `deployRunError`，不填錯的 ID
 
 ### verified
 - `publish/live-check.json` — HTTP 驗證紀錄
-- deploy success
+- deploy success（依 SHA 重新認定的那筆 run）
 - live URL 200
 - live title / lead / canonical 行為正確
+- live 頁面含取自內文的特徵字串（證明 body 真的渲染）
+- live 內容與 deploy 結論衝突時，以 live 內容為準
 
 ### social-shared
 - `social/facebook.md` — Facebook 長版分享文（300-500 字）

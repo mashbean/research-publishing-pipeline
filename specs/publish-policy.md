@@ -18,12 +18,22 @@ push 不算完成，deploy success 也不算最終完成。以 live URL 驗證�
 ### Deploy
 - workflow 已完成
 - status = success
+- **run 必須以 commit SHA 認定**：`run.headSha == publish.commitSha`。
+  不可取「最新一筆 run」——push 後 GitHub 要數秒才註冊新 run，當下最新的那筆
+  仍是上一個 commit 的；多 workflow 的 repo 還可能抓到 PR check。
+  比對不上就明確報錯，不回退到最新一筆（錯的 run ID 會被讀成 deploy 綠燈）。
 
 ### Live URL
 - HTTP 200
 - 標題正確
 - 首段或 lead 正確
+- **本文特徵字串正確**：頁面必須含一段取自內文的純文字句子，證明 body 真的渲染出來，
+  而不只是 route 解析成功（標題也會出現在索引頁、nav card 與 `<meta>`）
 - canonical 短網址可用
+
+### 兩者衝突時
+live 內容是唯一裁決依據。deploy success 但頁面沒有本文 → `verification-failed`，
+並在 `live-check.json` 記下 `contradiction`。不可因為 run 是綠的就判定發稿完成。
 
 ### 路徑一致性
 - canonical path 正常

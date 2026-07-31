@@ -261,8 +261,18 @@ def step_verify(job_dir: Path, state: dict) -> str | None:
         capture_output=True, text=True,
     )
     print(result.stdout)
+    if result.stderr.strip():
+        print(result.stderr, file=sys.stderr)
     if result.returncode not in (0, 2):
         return f"Verification error: {result.stderr}"
+    if result.returncode == 2:
+        # rc=2 means the live page does not serve the article. Reporting that as
+        # a successful step is how a failed publish gets mistaken for a done one.
+        state = load_state(job_dir)
+        return (
+            "Live 驗證未通過: "
+            f"{state.get('blockedReason', 'see publish/live-check.json')}"
+        )
     return None
 
 
