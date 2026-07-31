@@ -247,8 +247,8 @@ python3 scripts/run_pipeline.py <job-id> verify
 ```
 
 **Deploy run 以 commit SHA 認定**。push 後 GitHub 要數秒才註冊新 run，所以
-「最新一筆 run」通常還是上一個 commit 的（2026-07-30 就這樣把 9 小時前的舊 build
-記成本次 deploy，verify 讀到綠燈但線上是 404）。`publish_blog_entry.py` 改成輪詢
+「最新一筆 run」通常還是上一個 commit 的（2026-07-30 就這樣把 6.5 小時前完成的舊
+build 記成本次 deploy，verify 讀到綠燈但線上是 404）。`publish_blog_entry.py` 改成輪詢
 `headSha == commitSha`，認不到就留空並印 WARNING，**不回退到最新一筆**。
 
 `verify_publish.py` 會重新依 SHA 認定 run（不信 state 裡的 `deployRun`）、等它跑完，
