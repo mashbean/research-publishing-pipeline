@@ -16,9 +16,14 @@ FORWARD_TRANSITIONS: dict[str, list[str]] = {
     "evidence-mapped": ["drafted"],
     "drafted": ["fact-checking"],
     "fact-checking": ["rewritten", "researching"],          # backtrack: evidence gaps
-    "rewritten": ["editorial-pass", "accent-pending", "fact-checking"],    # PASS → accent-pending; FAIL → editorial-pass
-    "editorial-pass": ["accent-pending", "rewritten"],      # FAIL fix → re-pass → accent-pending
+    # PASS → accent-pending (opt-in accent) or readability-pending (academic default); FAIL → editorial-pass
+    "rewritten": ["editorial-pass", "accent-pending", "readability-pending", "fact-checking"],
+    "editorial-pass": ["accent-pending", "readability-pending", "rewritten"],
     "accent-pending": ["ready-to-publish", "rewritten"],    # accent done → ready; major issue → back to rewrite
+    # Academic/no-accent branch: strip argumentative scaffolding before publish (added 2026-07-30).
+    # accent-pass used to cover readability implicitly; academic mode disables it, so this
+    # stage owns readability instead. See prompts/agent-readability.md.
+    "readability-pending": ["ready-to-publish", "rewritten"],
     "ready-to-publish": ["published"],
     "published": ["verified", "publish-failed"],
     "verified": ["social-shared"],

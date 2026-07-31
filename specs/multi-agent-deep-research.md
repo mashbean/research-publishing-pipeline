@@ -151,7 +151,11 @@ python3 scripts/run_deep_research.py <job-id> integrate
 4. Editor subagent → `final/article-final.md`
 5. `run_editorial_pass.py --auto-advance`
 
-預設無 accent，editorial-pass 自動推進到 ready-to-publish。若 intake.yaml 含 `apply_mashbean_accent: true`，會走 accent-pending → accent subagent。詳見 [mashbean-accent-opt-in.md](mashbean-accent-opt-in.md)。
+6. Readability subagent → 拆論證鷹架，覆寫 `final/article-final.md`（2026-07-30 新增，見 [prompts/agent-readability.md](../prompts/agent-readability.md)）
+
+預設無 accent，editorial-pass 推進到 **readability-pending**，拆完鷹架再到 ready-to-publish。若 intake.yaml 含 `apply_mashbean_accent: true`，改走 accent-pending → accent subagent（accent 的口語化本身會拆掉鷹架，不需另跑 readability）。詳見 [mashbean-accent-opt-in.md](mashbean-accent-opt-in.md)。
+
+> **multi-agent 模式特別需要 readability-pass。** 5 個 sub-arg 各自帶回大量限定語與推論標記，整合後 writer 會把它們全部寫進正文，critic 又會要求補更多。2026-07-30 的〈中國基層參與的三十年〉正文因此累積到 17,855 字，拆完鷹架後 14,961 字，論證與證據一字未動。
 
 ## 失敗模式與救援
 
@@ -281,9 +285,11 @@ accent 是另一個獨立軸（與 multi-agent 無關）：
 
 ```
 intake.yaml apply_mashbean_accent: true？
-  ├─ 是 → editorial-pass 後走 accent-pending → accent subagent
-  └─ 否（預設）→ editorial-pass 後直接 ready-to-publish
+  ├─ 是 → editorial-pass 後走 accent-pending → accent subagent → ready-to-publish
+  └─ 否（預設）→ editorial-pass 後走 readability-pending → readability subagent → ready-to-publish
 ```
+
+兩條分支各有一個「反制關」。accent-pass 反制的是「人味被研究正確性磨掉」，readability-pass 反制的是「論證鷹架不斷累積」。前者加東西，後者拆東西，但補的是同一個缺口——**upstream 每一關的目標函數都是嚴謹，沒有一關的目標函數是讀者**。
 
 兩個 flow 在 Step 5 (integrate) 之後合流，用同一個 writer / critic / editor 階段。
 

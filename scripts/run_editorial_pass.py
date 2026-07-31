@@ -413,19 +413,30 @@ def main() -> int:
                 print(f"\n→ State advanced to accent-pending (apply_mashbean_accent=true)")
                 print(f"  (accent 命中 {accent.get('count', 0)}/{ACCENT_MIN_HITS}{'，需 accent-pass 補強' if accent.get('below_min') else '，已達標但仍可潤色'})")
             else:
-                # Default (academic / formal): skip accent entirely
-                state["status"] = "ready-to-publish"
-                state["lastDeliverable"] = "final/article-final.md (no-accent default)"
-                state["nextStep"] = "frontmatter 確認 → commit → push → deploy → live URL 驗證"
+                # Default (academic / formal): skip accent, but route through
+                # readability-pending to strip argumentative scaffolding.
+                #
+                # Added 2026-07-30. accent-pass used to do double duty — it made
+                # articles sound human AND readable. Academic mode disables it
+                # entirely, which left nobody owning readability while every
+                # other stage (critic → rewrite → editor) optimizes for rigor
+                # and keeps adding hedges. Scaffolding accumulated with no
+                # counterweight. See prompts/agent-readability.md.
+                state["status"] = "readability-pending"
+                state["lastDeliverable"] = "verification/editorial-pass-report.md"
+                state["nextStep"] = "spawn readability subagent → 拆論證鷹架 → 覆寫 final/article-final.md → 推進到 ready-to-publish"
                 save_state(job_dir, state)
-                print(f"\n→ State advanced to ready-to-publish (no-accent default; set apply_mashbean_accent: true to opt in)")
-        elif state["status"] == "accent-pending":
-            # Re-run after accent-pass: advance to ready-to-publish
+                print(f"\n→ State advanced to readability-pending (no-accent default)")
+                print(f"  (拆鷹架階段：段落開頭宣告句、跨節交叉引用、路線圖段落、編號鷹架)")
+                print(f"  (set apply_mashbean_accent: true to route through accent-pass instead)")
+        elif state["status"] in ("accent-pending", "readability-pending"):
+            # Re-run after accent-pass or readability-pass: advance to publish
+            done = "accent-pass" if state["status"] == "accent-pending" else "readability-pass"
             state["status"] = "ready-to-publish"
-            state["lastDeliverable"] = "final/article-final.md (accent-pass complete)"
+            state["lastDeliverable"] = f"final/article-final.md ({done} complete)"
             state["nextStep"] = "frontmatter 確認 → commit → push → deploy → live URL 驗證"
             save_state(job_dir, state)
-            print(f"\n→ State advanced to ready-to-publish (accent-pass complete)")
+            print(f"\n→ State advanced to ready-to-publish ({done} complete)")
 
     return 0 if report["passed"] else 1
 

@@ -67,6 +67,10 @@ content_goal: personal_blog
 | `prompts/agent-accent.md` | accent subagent 自身規範（僅在 opt-in 才被觸發，內容不變） |
 | `scripts/lib.py` | state machine 仍保留 accent-pending 狀態，僅在 opt-in 時用到 |
 | `scripts/run_pipeline.py` | step_accent_pass 仍存在，僅在 opt-in 時觸發 |
+| `prompts/agent-readability.md` | **無 accent 分支的對應關卡**（2026-07-30 新增）。opt-in accent 時**不跑**——accent 的口語化已涵蓋拆鷹架 |
+| `scripts/lib.py` / `run_pipeline.py` | `readability-pending` 狀態與 `step_readability_pass`，僅在無 accent（預設）時觸發 |
+
+> **2026-07-30 補記**：把 accent 改為 opt-in 時，沒有注意到 accent-pass 其實身兼兩職——它讓文章像 mashbean 寫的，也讓文章好讀。關掉 accent 等於同時關掉了可讀性的唯一守門員，而 critic → rewrite → editor 每一關都在往「更多限定語、更多顯式論證」推。這個缺口在〈中國基層參與的三十年〉發稿後由使用者回饋暴露，補法是新增 readability-pass 作為無 accent 分支的對應關卡。
 
 ## 測試
 

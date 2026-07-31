@@ -151,6 +151,26 @@ Agent(
 )
 ```
 
+### Step 7.4: Readability Pass（用 subagent，**僅學術／無 accent 模式**）
+
+> **這一步是 2026-07-30 新增的**，補的是流程的結構性缺口。詳見 [prompts/agent-readability.md](prompts/agent-readability.md)。
+
+**為什麼需要**：accent pass 原本身兼兩職——讓文章像人寫的、也讓它好讀。學術模式整個關掉 accent pass，於是**沒有任何一關負責可讀性**；而 writer → critic → rewrite → editor 每一關的目標函數都是「更嚴謹」（critic 要求補限定語、rewrite 照補、editor 檢查有沒有補）。結果是論證鷹架不斷累積，沒有人負責拆。
+
+〈中國基層參與的三十年〉發稿後使用者回饋「過於咬文嚼字，各種難以閱讀的循環與論證」，追查後就是這個缺口。該篇拆完鷹架後正文 17,855 → 14,961 字（−16.2%），論證與證據一字未動。
+
+```
+Agent(
+  description="Readability pass for <job-id>",
+  subagent_type="general-purpose",
+  prompt="你是可讀性代理。讀取 <job-dir>/prompts/agent-readability.md 的完整指令。\n讀取 final/article-final.md、intake.yaml、verification/fact-check-report.md，\n先備份 final/article-final-v1-verbose.md，再覆寫 final/article-final.md。\n只拆論證鷹架，不動論證、數字、引用與誠實限定語。"
+)
+```
+
+**四類病灶**：①段落第一句在描述「這段的功能」而非講事情（最重要，AI 味最集中處）②跨節交叉引用（「第五節會回到」）③路線圖段落（「以下依序處理六件事」）④編號鷹架（「第一條證據／第一個限定」）。
+
+**紅線**：刪掉「誠實的鷹架」，保留「誠實的內容」。「這一步在文中被明確標示為推論」是鷹架要刪；「這一步沒有直接的時序證據」是內容要留。引用 1:1、所有數字、fact-check 要求補的限定語一律不可動。
+
 ### Step 7.5: Accent Pass（用 subagent，**僅 opt-in accent 模式**）
 
 > **預設模式不會走到這一步**。`run_editorial_pass.py` 在 `apply_mashbean_accent: true` 未設時直接從 editorial-pass 推進到 `ready-to-publish`。Step 7.5 僅在 intake.yaml 含 `apply_mashbean_accent: true` 或 `content_goal: personal_blog` 時觸發。詳見 [specs/mashbean-accent-opt-in.md](specs/mashbean-accent-opt-in.md)。
@@ -270,6 +290,20 @@ python3 scripts/run_pipeline.py <job-id> status
 5. **並行限制**：research + writer 可以對不同文章並行，但同一文章的 writer 和 critic 必須串行
 6. **結構變更後必須檢查推理鏈**（P2 新增）：當使用者要求刪除章節、重組結構、或大幅修改論證方向時，主 agent 在轉發給 subagent 之前應附加指令：「完成修改後，重新檢查推理鏈是否完整。如果刪除的內容原本支撐某個論點，該論點是否仍有其他支撐？如有推理斷裂，請標示並建議補救方案，而非無聲地執行刪除。」
 7. **整合大型 subagent 輸出由 main agent 直接做**：當需要把多份 subagent 輸出（總計 ≥ 200KB）合成為單一檔案時，**不要派 integrator subagent**——歷史教訓：subagent 在 600 秒 watchdog 視窗內無法產出 100KB+ 的單檔輸出，會 stall。改由 main agent 用 Bash 提取 + Write 直接做。
+8. **所有長輸出 subagent 一律要求「分段寫檔」**（2026-07-30 新增）：prompt 裡明確寫「先 Write 建立檔案並寫入第一節，之後每完成一節就追加；不要做完才開始寫。任何時間點被中斷，磁碟上都必須already有可用成果」。
+   歷史教訓：2026-07-30 有兩個 sub-arg agent 撞上 API session limit，其中一個已回報「我有豐富的證據基礎，現在開始寫文件」然後死亡，**數十分鐘的檢索全部歸零**。改為分段寫檔後重跑，同樣中斷風險下磁碟上保有成果。
+9. **平行 subagent 不要再派子 agent**（2026-07-30 新增）：sub-arg agent 若自行 fan-out，token 消耗會失控並提高撞上 session limit 的機率。prompt 裡明講「不要派任何 subagent，你自己用 WebSearch／WebFetch 做研究」。
+   （但子 agent 的產出若已回傳到 main agent context，**務必先搶救寫檔再重跑**——2026-07-30 的 sub-arg 3 主 agent 死亡但子 agent 的核實資料還在 context 裡，搶救下來的檔案包含一項關鍵否證。）
+10. **整合時必須把各 sub-arg 的「自陳存疑項」上收進 high-risk-claims**（2026-07-30 新增）：sub-arg 檔案內部標註的「建議重新核對原刊」「本項為推導值」「未取得全文」等自我警告，main agent 整合時**極易漏掉**，因為它們散在 4-5 萬字的內文裡。
+    歷史教訓：2026-07-30 的 sub-arg 1 自陳「趙琦 2020 的數字建議重新核對原刊」，該警告沒有進 high-risk 清單，writer 照抄，**六個數字錯了五個**，且那正是全文最核心的量化證據。整合時應以 Bash grep 各檔的存疑標記，逐條收進 `high_risk_claims` section。
+
+## Critic 的數字查核方法（2026-07-30 新增）
+
+**凡屬 A 級來源的關鍵數字，critic 必須回到原刊比對，不可只信上游 sub-arg 的轉述。**
+
+2026-07-30 的實例：sub-arg 1 從 PDF 抽取趙琦 2020 的統計數字，但該刊 PDF 使用**非標準子集字型編碼**，純文字抽取會得到亂碼數字，agent 以字元對照表還原時錯了五個。critic 的正確作法是取得原刊 PDF 後**渲染為影像再目視逐字比對**（PyMuPDF），才確認正確值。
+
+判準：若某個數字在文中承擔論證重量（出現在摘要、章節結論、或被用來支撐主命題），就值得付出取原刊的成本。中文期刊 PDF 的字型編碼問題常見，**文字抽取的數字不可信**。
 
 ## 預設無 accent + Multi-agent 模式（2026-05-03 起）
 

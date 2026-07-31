@@ -139,6 +139,30 @@ def step_accent_pass(job_dir: Path, state: dict) -> str | None:
     )
 
 
+def step_readability_pass(job_dir: Path, state: dict) -> str | None:
+    """readability-pending → ready-to-publish: spawn readability subagent (by main agent).
+
+    Academic/no-accent counterpart to step_accent_pass. Strips argumentative
+    scaffolding that accumulates because every upstream stage optimizes for
+    rigor and none owns readability. Added 2026-07-30.
+    """
+    final_dir = job_dir / "final"
+    article = final_dir / "article-final.md"
+    if not article.exists():
+        return "final/article-final.md not found — editorial-pass should have produced it"
+    return (
+        "readability-pass 需要主對話 spawn readability subagent。\n"
+        "請使用 Agent tool 啟動 general-purpose subagent，prompt 指向：\n"
+        f"  prompts/agent-readability.md\n"
+        f"  備份目標：{final_dir / 'article-final-v1-verbose.md'}\n"
+        f"  覆寫目標：{article}\n"
+        "只拆論證鷹架，不動論證、數字、引用與誠實限定語。\n"
+        "完成後 main agent 跑：\n"
+        f"  python3 scripts/run_editorial_pass.py {state['jobId']} --auto-advance\n"
+        "（PASS 且狀態為 readability-pending → 自動推進到 ready-to-publish）"
+    )
+
+
 def step_publish(job_dir: Path, state: dict) -> str | None:
     """ready-to-publish → published: needs repo + target path."""
     if (job_dir / "final" / "argmap.yaml").exists() and not (job_dir / "final" / "argument.argdown").exists():
@@ -264,6 +288,7 @@ NEXT_STEP: dict[str, callable] = {
     "rewritten": step_editorial_pass,
     "editorial-pass": step_editorial_pass,
     "accent-pending": step_accent_pass,  # needs main agent to spawn accent subagent
+    "readability-pending": step_readability_pass,  # academic default: strip scaffolding
     "ready-to-publish": step_publish,
     "published": step_verify,
 }
@@ -276,6 +301,7 @@ NAMED_STEPS = {
     "fact-check": step_fact_check,
     "editorial-pass": step_editorial_pass,
     "accent-pass": step_accent_pass,
+    "readability-pass": step_readability_pass,
     "argdown": step_argdown,
     "publish": step_publish,
     "verify": step_verify,
@@ -286,6 +312,7 @@ NAMED_STEPS = {
 HUMAN_REQUIRED = {
     "fact-checking": "Complete fact-check-report.md, then update state to 'rewritten'",
     "accent-pending": "Spawn accent subagent (prompts/agent-accent.md) → overwrite final/article-final.md → re-run editorial-pass",
+    "readability-pending": "Spawn readability subagent (prompts/agent-readability.md) → strip scaffolding → overwrite final/article-final.md → re-run editorial-pass",
     "blocked": "Resolve blocked reason, then update state",
     "needs-decision": "Make decision, then update state",
 }
