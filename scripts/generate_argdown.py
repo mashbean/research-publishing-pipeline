@@ -90,7 +90,7 @@ def frontmatter(data: dict[str, Any]) -> str:
             f"title: {title}",
             f"subTitle: {subtitle}",
             f"slug: {slug}",
-            "author: research-article-pipeline argdown export",
+            "author: mashbean + assisted with AI Agent",
             "model:",
             "  removeTagsFromText: true",
             "===",
